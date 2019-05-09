@@ -1,0 +1,66 @@
+{
+    "chiefComplaint": "SCTID:999",
+    "algorithm": {
+        "emergencyLevel": "1",
+        "discriminators": [
+            {
+                "id": "SCTID:0",
+                "questions": [
+                    "Question1",
+                    "Question2"
+                ],
+                "definition": "Definition1"
+            },
+            {
+                "id": "SCTID:1",
+                "questions": [
+                    "Question3"
+                ],
+                "definition": "Definition2"
+            }
+        ],
+        "advices": [
+            "Advice1"
+        ],
+        "lowerLevel": {
+            "emergencyLevel": "2",
+            "discriminators": [
+                {
+                    "id": "SCTID:2",
+                    "questions": [
+                        "Question4",
+                        "Question5"
+                    ],
+                    "definition": "Definition3"
+                },
+                {
+                    "id": "SCTID:3",
+                    "questions": [
+                        "Question6"
+                    ],
+                    "definition": "Definition4"
+                }
+            ],
+            "lowerLevel": {
+                "emergencyLevel": "3",
+                "discriminators": [
+                    {
+                        "id": "SCTID:4",
+                        "questions": [
+                            "Question7",
+                            "Question8"
+                        ],
+                        "definition": "Definition5"
+                    }
+                ],
+                "lowerLevel": {
+                    "emergencyLevel": "4",
+                    "advices": [
+                        "Advice2",
+                        "Advice3"
+                    ]
+                }
+            }
+        }
+    }
+}

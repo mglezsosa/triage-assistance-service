@@ -1,0 +1,7 @@
+apply plugin: 'application'
+
+mainClassName = 'tech.sosa.App'
+
+dependencies {
+    compile project(":src:triage")
+}

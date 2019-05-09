@@ -1,2 +1,4 @@
 rootProject.name = 'triage_assistance_service'
 
+include 'applications'
+include 'src:triage'

@@ -1,18 +1,67 @@
-plugins {
-    id 'java'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
 }
 
-group 'tech.sosa'
-version '1.0-SNAPSHOT'
+allprojects {
+    apply plugin: 'java'
 
-sourceCompatibility = 1.11
+    sourceCompatibility = 11
+    targetCompatibility = 11
 
-repositories {
-    mavenCentral()
+    repositories {
+        mavenCentral()
+    }
+
+    sourceSets {
+        main {
+            java { srcDirs = [ 'main' ] }
+            resources {
+                srcDirs = [ 'main/resources' ]
+            }
+        }
+        test {
+            java { 
+                srcDirs = [ 'test' ] 
+            }
+            resources {
+                srcDirs = [ 'test/resources' ]
+            }
+        }
+    }
+
+    task hello {
+        doLast { task ->
+            println "I'm $task.project.name"
+        }
+    }
 }
 
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    implementation 'com.google.code.gson:gson:2.8.5'
-    compile group: 'org.json', name: 'json', version: '20180813'
+subprojects {
+    group = "tech.sosa.${rootProject.name}"
+
+    dependencies {
+        // Prod
+        implementation 'io.projectreactor:reactor-bus:2.0.8.RELEASE'
+        compile group: 'org.json', name: 'json', version: '20180813'
+        compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
+        compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jdk8', version: '2.9.8'
+
+        // Test
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+    }
+
+    test {
+
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
+
+        reports {
+            html.enabled = true
+        }
+    }
 }

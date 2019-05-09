@@ -1,0 +1,73 @@
+{
+    "chiefComplaint": "SCTID:998",
+    "algorithm": {
+        "emergencyLevel": "1",
+        "discriminators": [
+            {
+                "id": "SCTID:6",
+                "questions": [
+                    "Question10",
+                    "Question11"
+                ],
+                "definition": "Definition7"
+            },
+            {
+                "id": "SCTID:7",
+                "questions": [
+                    "Question12"
+                ],
+                "definition": "Definition8"
+            }
+        ],
+        "advices": [
+            "Advice4"
+        ],
+        "lowerLevel": {
+            "emergencyLevel": "2",
+            "discriminators": [
+                {
+                    "id": "SCTID:8",
+                    "questions": [
+                        "Question13",
+                        "Question14"
+                    ],
+                    "definition": "Definition9"
+                },
+                {
+                    "id": "SCTID:9",
+                    "questions": [
+                        "Question15"
+                    ],
+                    "definition": "Definition10"
+                }
+            ],
+            "lowerLevel": {
+                "emergencyLevel": "3",
+                "discriminators": [
+                    {
+                        "id": "SCTID:10",
+                        "questions": [
+                            "Question16",
+                            "Question17"
+                        ],
+                        "definition": "Definition11"
+                    },
+                    {
+                        "id": "SCTID:11",
+                        "questions": [
+                            "Question18"
+                        ],
+                        "definition": "Definition12"
+                    }
+                ],
+                "lowerLevel": {
+                    "emergencyLevel": "4",
+                    "advices": [
+                        "Advice5",
+                        "Advice6"
+                    ]
+                }
+            }
+        }
+    }
+}
