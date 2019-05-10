@@ -1,7 +1,15 @@
-apply plugin: 'application'
-
-mainClassName = 'tech.sosa.App'
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.1.4.RELEASE'
+}
 
 dependencies {
     compile project(":src:triage")
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.4.RELEASE'
+}
+
+bootJar {
+    mainClassName = 'tech.sosa.triage_assistance_service.infrastructure.springframework.boot.App'
+    baseName = 'triage-service'
+    version =  '0.1.0'
 }
