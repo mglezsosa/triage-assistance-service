@@ -3,52 +3,19 @@ package tech.sosa.triage_assistance_service.application.dto;
 import java.util.Collection;
 import java.util.Objects;
 
-public class DiscriminatorDTO {
+public class DiscriminatorDTO extends ClinicalFindingDTO {
 
-    public String id;
-    public Collection<String> questions;
     public String definition;
+    public Collection<String> questions;
 
     public DiscriminatorDTO() {
     }
 
-    public DiscriminatorDTO(String id, Collection<String> questions, String definition) {
-        this.id = id;
-        this.questions = questions;
+    public DiscriminatorDTO(String expression, String title, String definition,
+            Collection<String> questions) {
+        super(expression, title);
         this.definition = definition;
-    }
-
-    public String id() {
-        return id;
-    }
-
-    public void id(String id) {
-        this.id = id;
-    }
-
-    public Collection<String> questions() {
-        return questions;
-    }
-
-    public void questions(Collection<String> questions) {
         this.questions = questions;
-    }
-
-    public String definition() {
-        return definition;
-    }
-
-    public void definition(String definition) {
-        this.definition = definition;
-    }
-
-    @Override
-    public String toString() {
-        return "DiscriminatorDTO{" +
-                "id='" + id + '\'' +
-                ", questions=" + questions +
-                ", definition='" + definition + '\'' +
-                '}';
     }
 
     @Override
@@ -59,14 +26,26 @@ public class DiscriminatorDTO {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
+        if (!super.equals(o)) {
+            return false;
+        }
         DiscriminatorDTO that = (DiscriminatorDTO) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(questions, that.questions) &&
-                Objects.equals(definition, that.definition);
+        return Objects.equals(definition, that.definition) &&
+                Objects.equals(questions, that.questions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, questions, definition);
+        return Objects.hash(super.hashCode(), definition, questions);
+    }
+
+    @Override
+    public String toString() {
+        return "DiscriminatorDTO{" +
+                "definition='" + definition + '\'' +
+                ", questions=" + questions +
+                ", id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                '}';
     }
 }

@@ -1,13 +1,18 @@
 package tech.sosa.triage_assistance_service.domain.model;
 
 import java.util.Objects;
+import org.snomed.languages.scg.domain.model.Expression;
 
 public class ClinicalFindingId {
 
-    private String value;
+    private Expression value;
 
-    public ClinicalFindingId(String value) {
+    public ClinicalFindingId(Expression value) {
         this.value = value;
+    }
+
+    public Expression value() {
+        return value;
     }
 
     @Override
@@ -19,7 +24,7 @@ public class ClinicalFindingId {
             return false;
         }
         ClinicalFindingId that = (ClinicalFindingId) o;
-        return value.equals(that.value);
+        return Objects.equals(value, that.value);
     }
 
     @Override
@@ -29,6 +34,8 @@ public class ClinicalFindingId {
 
     @Override
     public String toString() {
-        return value;
+        return "ClinicalFindingId{" +
+                "value=" + value +
+                '}';
     }
 }

@@ -8,8 +8,9 @@ public class Discriminator extends ClinicalFinding {
     private Collection<String> questions;
     private String definition;
 
-    public Discriminator(ClinicalFindingId id, Collection<String> questions, String definition) {
-        super(id);
+    public Discriminator(ClinicalFindingId id,
+            ClinicalFindingTitle title, Collection<String> questions, String definition) {
+        super(id, title);
         this.questions = questions;
         this.definition = definition;
     }

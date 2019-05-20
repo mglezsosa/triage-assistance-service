@@ -7,16 +7,16 @@ import java.util.Optional;
 
 public class TriageOutput {
 
-    private EmergencyLevel emergencyLevel;
+    private AlgorithmLevelTitle algorithmLevelTitle;
     private Collection<String> advices;
 
-    public TriageOutput(EmergencyLevel emergencyLevel, Collection<String> advices) {
-        this.emergencyLevel = emergencyLevel;
+    public TriageOutput(AlgorithmLevelTitle algorithmLevelTitle, Collection<String> advices) {
+        this.algorithmLevelTitle = algorithmLevelTitle;
         this.advices = Optional.ofNullable(advices).orElse(Collections.emptyList());
     }
 
-    public EmergencyLevel emergencyLevel() {
-        return emergencyLevel;
+    public AlgorithmLevelTitle emergencyLevel() {
+        return algorithmLevelTitle;
     }
 
     public Collection<String> advices() {
@@ -25,7 +25,7 @@ public class TriageOutput {
 
     @Override
     public String toString() {
-        return "{ emergencyLevel: " + emergencyLevel.toString() + ", "
+        return "{ algorithmLevelTitle: " + algorithmLevelTitle.toString() + ", "
                 + "advices: " + advices.toString() + " }";
     }
 
@@ -38,12 +38,12 @@ public class TriageOutput {
             return false;
         }
         TriageOutput that = (TriageOutput) o;
-        return Objects.equals(emergencyLevel, that.emergencyLevel) &&
+        return Objects.equals(algorithmLevelTitle, that.algorithmLevelTitle) &&
                 Objects.equals(advices, that.advices);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(emergencyLevel, advices);
+        return Objects.hash(algorithmLevelTitle, advices);
     }
 }

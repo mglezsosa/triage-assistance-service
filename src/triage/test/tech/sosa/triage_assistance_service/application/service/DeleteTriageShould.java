@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import org.junit.Before;
 import org.junit.Test;
+import org.snomed.languages.scg.SCGObjectFactory;
+import org.snomed.languages.scg.SCGQueryBuilder;
 import tech.sosa.triage_assistance_service.application.TriageMapper;
 import tech.sosa.triage_assistance_service.application.dto.TriageDTO;
 import tech.sosa.triage_assistance_service.domain.model.Triage;
@@ -17,12 +19,12 @@ import tech.sosa.triage_assistance_service.utils.TestWithUtils;
 public class DeleteTriageShould extends TestWithUtils {
 
     private TriageRepository repo;
+    private TriageMapper mapper;
     private Triage existingTriage;
 
     @Before
     public void setUp() throws IOException, URISyntaxException {
-
-        TriageMapper mapper = new TriageMapper();
+        mapper = new TriageMapper(new SCGQueryBuilder(new SCGObjectFactory()));
         existingTriage = mapper.from(readJSON(
                 readFromResource("triageExample.json"),
                 TriageDTO.class
@@ -33,7 +35,6 @@ public class DeleteTriageShould extends TestWithUtils {
                         TriageDTO.class
                 ))
         );
-
     }
 
     @Test
@@ -41,8 +42,9 @@ public class DeleteTriageShould extends TestWithUtils {
 
         assertNotNull(repo.find(existingTriage.chiefComplaint()));
 
-        new DeleteTriage(repo).execute(
-                new DeleteTriageRequest(existingTriage.chiefComplaint().id().toString())
+        new DeleteTriage(repo, mapper).execute(
+                new DeleteTriageRequest(
+                        mapper.expressionToString(existingTriage.chiefComplaint().id().value()))
         );
 
         assertNull(repo.find(existingTriage.chiefComplaint()));

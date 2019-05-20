@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
+import org.snomed.languages.scg.SCGObjectFactory;
+import org.snomed.languages.scg.SCGQueryBuilder;
 import tech.sosa.triage_assistance_service.application.TriageMapper;
 import tech.sosa.triage_assistance_service.application.dto.TriageDTO;
 import tech.sosa.triage_assistance_service.domain.model.TriageRepository;
@@ -24,8 +26,9 @@ public class ViewAllTriagesShould extends TestWithUtils {
     @Before
     public void setUp() throws URISyntaxException, IOException {
 
-        triageMapper = new TriageMapper();
+        triageMapper = new TriageMapper(new SCGQueryBuilder(new SCGObjectFactory()));
 
+        // Triages below are identical except for the id.
         triage1 = readJSON(readFromResource("triageExample.json"), TriageDTO.class);
         triage2 = readJSON(readFromResource("triageExample2.json"), TriageDTO.class);
 

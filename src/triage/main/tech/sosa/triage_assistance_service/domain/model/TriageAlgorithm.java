@@ -1,37 +1,19 @@
 package tech.sosa.triage_assistance_service.domain.model;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 public class TriageAlgorithm {
 
-    private EmergencyLevel currentLevel;
-    private Collection<Discriminator> discriminators;
-    private Collection<String> advices;
-    private TriageAlgorithm lowerLevelAlgorithm;
+    private List<AlgorithmLevel> levels;
 
-    public TriageAlgorithm(EmergencyLevel currentLevel,
-            Collection<Discriminator> discriminators, Collection<String> advices,
-            TriageAlgorithm lowerLevelAlgorithm) {
-        this.currentLevel = currentLevel;
-        this.discriminators = discriminators;
-        this.advices = advices;
-        this.lowerLevelAlgorithm = lowerLevelAlgorithm;
+    public TriageAlgorithm(List<AlgorithmLevel> levels) {
+        this.levels = levels;
     }
 
-    public TriageOutput evaluate(Collection<ClinicalFinding> clinicalFindings) {
-        if (discriminators == null || containsAny(clinicalFindings)) {
-            return new TriageOutput(
-                    currentLevel,
-                    Optional.ofNullable(advices).orElse(Collections.emptyList()));
-        }
-        return lowerLevelAlgorithm.evaluate(clinicalFindings);
-    }
-
-    private boolean containsAny(Collection<ClinicalFinding> clinicalFindings) {
-        return discriminators.stream().anyMatch(clinicalFindings::contains);
+    public List<AlgorithmLevel> levels() {
+        return levels;
     }
 
     @Override
@@ -43,41 +25,32 @@ public class TriageAlgorithm {
             return false;
         }
         TriageAlgorithm algorithm = (TriageAlgorithm) o;
-        return currentLevel.equals(algorithm.currentLevel) &&
-                Objects.equals(discriminators, algorithm.discriminators) &&
-                Objects.equals(advices, algorithm.advices) &&
-                Objects.equals(lowerLevelAlgorithm, algorithm.lowerLevelAlgorithm);
+        return Objects.equals(levels, algorithm.levels);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(currentLevel, discriminators, advices, lowerLevelAlgorithm);
+        return Objects.hash(levels);
     }
 
     @Override
     public String toString() {
-        return "{ emergencyLevel: " + currentLevel.toString() + ", "
-                + "discriminators: " + Optional.ofNullable(discriminators)
-                .map(Object::toString).orElse("null") + ", "
-                + "advices: " + Optional.ofNullable(advices)
-                .map(Object::toString).orElse("null") + ", "
-                + "default: " + Optional.ofNullable(lowerLevelAlgorithm)
-                .map(Object::toString).orElse("null") + " }";
+        return "TriageAlgorithm{" +
+                "levels=" + levels +
+                '}';
     }
 
-    public EmergencyLevel emergencyLevel() {
-        return currentLevel;
+    public TriageOutput evaluate(Collection<ClinicalFinding> findings) {
+        AlgorithmLevel resultLevel = firstLevelThatContains(findings);
+        return new TriageOutput(
+                resultLevel.title(),
+                resultLevel.advices()
+        );
     }
 
-    public Optional<Collection<Discriminator>> discriminators() {
-        return Optional.ofNullable(discriminators);
+    private AlgorithmLevel firstLevelThatContains(Collection<ClinicalFinding> findings) {
+        return levels.stream()
+                .filter(level -> level.containsAny(findings)).findFirst().orElseThrow();
     }
 
-    public Optional<Collection<String>> advices() {
-        return Optional.ofNullable(advices);
-    }
-
-    public Optional<TriageAlgorithm> lowerLevelAlgorithm() {
-        return Optional.ofNullable(lowerLevelAlgorithm);
-    }
 }

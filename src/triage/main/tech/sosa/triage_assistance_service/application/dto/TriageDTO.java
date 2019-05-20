@@ -4,31 +4,17 @@ import java.util.Objects;
 
 public class TriageDTO {
 
-    public String chiefComplaint;
-    public TriageAlgorithmDTO algorithm;
+    public ClinicalFindingDTO chiefComplaint;
+    public AlgorithmDTO algorithm;
 
-    public String chiefComplaint() {
-        return chiefComplaint;
+    public TriageDTO() {
     }
 
-    public void chiefComplaint(String chiefComplaint) {
+    public TriageDTO(
+            ClinicalFindingDTO chiefComplaint,
+            AlgorithmDTO algorithm) {
         this.chiefComplaint = chiefComplaint;
-    }
-
-    public TriageAlgorithmDTO algorithm() {
-        return algorithm;
-    }
-
-    public void algorithm(TriageAlgorithmDTO algorithm) {
         this.algorithm = algorithm;
-    }
-
-    @Override
-    public String toString() {
-        return "TriageDTO{" +
-                "chiefComplaint='" + chiefComplaint + '\'' +
-                ", algorithm=" + algorithm +
-                '}';
     }
 
     @Override
@@ -47,5 +33,13 @@ public class TriageDTO {
     @Override
     public int hashCode() {
         return Objects.hash(chiefComplaint, algorithm);
+    }
+
+    @Override
+    public String toString() {
+        return "TriageDTO{" +
+                "chiefComplaint=" + chiefComplaint +
+                ", algorithm=" + algorithm +
+                '}';
     }
 }

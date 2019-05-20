@@ -2,11 +2,11 @@ package tech.sosa.triage_assistance_service.domain.model;
 
 import java.util.Objects;
 
-public class EmergencyLevel {
+public class AlgorithmLevelTitle {
 
     private String level;
 
-    public EmergencyLevel(String level) {
+    public AlgorithmLevelTitle(String level) {
         this.level = level;
     }
 
@@ -22,7 +22,7 @@ public class EmergencyLevel {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        EmergencyLevel that = (EmergencyLevel) o;
+        AlgorithmLevelTitle that = (AlgorithmLevelTitle) o;
         return level.equals(that.level);
     }
 

@@ -1,73 +1,66 @@
 {
-    "chiefComplaint": "SCTID:998",
+    "chiefComplaint": {
+        "id": "25064002",
+        "title": "Dolor de cabeza"
+    },
     "algorithm": {
-        "emergencyLevel": "1",
-        "discriminators": [
+        "criticalLevels": [
             {
-                "id": "SCTID:6",
-                "questions": [
-                    "Question10",
-                    "Question11"
-                ],
-                "definition": "Definition7"
-            },
-            {
-                "id": "SCTID:7",
-                "questions": [
-                    "Question12"
-                ],
-                "definition": "Definition8"
-            }
-        ],
-        "advices": [
-            "Advice4"
-        ],
-        "lowerLevel": {
-            "emergencyLevel": "2",
-            "discriminators": [
-                {
-                    "id": "SCTID:8",
-                    "questions": [
-                        "Question13",
-                        "Question14"
-                    ],
-                    "definition": "Definition9"
-                },
-                {
-                    "id": "SCTID:9",
-                    "questions": [
-                        "Question15"
-                    ],
-                    "definition": "Definition10"
-                }
-            ],
-            "lowerLevel": {
-                "emergencyLevel": "3",
+                "levelTitle": "FtF Now",
                 "discriminators": [
                     {
-                        "id": "SCTID:10",
+                        "id": "90480005",
+                        "title": "Vía respiratoria comprometida",
+                        "definition": "An airway may be compromised either because it cannot be kept open or because the airway protective reflexes (that stop inhalation) have been lost. Failure to keep the airway open will result either in intermittent total obstruction or in partial obstruction. This will manifest itself as snoring or bubbling sounds during breathing.",
                         "questions": [
-                            "Question16",
-                            "Question17"
-                        ],
-                        "definition": "Definition11"
+                            "Are they awake?",
+                            "Are they struggling to breathe?",
+                            "Can they get their breath in?",
+                            "Do they make a gurgling sound when they breathe?"
+                        ]
                     },
                     {
-                        "id": "SCTID:11",
-                        "questions": [
-                            "Question18"
-                        ],
-                        "definition": "Definition12"
+                        "id": "300361008",
+                        "title": "Vómito con sangre",
+                        "definition": "Vomited blood may be fresh (bright or dark red) or coffee ground in appearance.",
+                        "questions": []
                     }
                 ],
-                "lowerLevel": {
-                    "emergencyLevel": "4",
-                    "advices": [
-                        "Advice5",
-                        "Advice6"
-                    ]
-                }
+                "advices": [
+                    "if unconscious place in the recovery position, if conscious try to reassure.",
+                    "Provide Life Support Advice if required.",
+                    "Take available analgesia for pain control.",
+                    "Keep sample of vomit/stool if possible."
+                ]
             }
+        ],
+        "intermediateLevels": [
+            {
+                "levelTitle": "FtF Soon",
+                "discriminators": [
+                    {
+                        "id": "267055007",
+                        "title": "Heces negras",
+                        "definition": "Something",
+                        "questions": []
+                    }
+                ],
+                "advices": [
+                    "Take available analgesia for pain control.",
+                    "Call back if symptoms worsen or concerned.",
+                    "Keep sample of stool if possible."
+                ]
+            }
+        ],
+        "defaultLevel": {
+            "levelTitle": "Advice only",
+            "advices": [
+                "Maintain uid intake – plenty of clear uids/consider oral rehydration therapy.",
+                "Paracetamol qds for pain and temperature control.",
+                "Rest.",
+                "Refer to GP if symptoms persist.",
+                "Call back if symptoms worsen or concerned."
+            ]
         }
     }
 }
