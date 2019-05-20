@@ -1,0 +1,191 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "levelTitle": {
+            "type": "string",
+            "title": "The Level Title Schema",
+            "minLength": 1,
+            "examples": [
+                "Advice only",
+                "FtF Now"
+            ]
+        },
+        "advices": {
+            "type": "array",
+            "title": "The Advices Schema",
+            "minItems": 1,
+            "items": {
+                "type": "string",
+                "minLength": 1,
+                "title": "The Advice Schema",
+                "examples": [
+                    "Maintain uid intake – plenty of clear uids/consider oral rehydration therapy.",
+                    "Paracetamol qds for pain and temperature control.",
+                    "Rest."
+                ]
+            }
+        },
+        "questions": {
+            "type": "array",
+            "title": "The Questions Schema",
+            "items": {
+                "type": "string",
+                "title": "The Question Schema",
+                "minLength": 1,
+                "examples": [
+                    "Are they awake?",
+                    "Are they struggling to breathe?"
+                ]
+            }
+        },
+        "definition": {
+            "type": "string",
+            "title": "The Discriminator Definition Schema",
+            "default": "",
+            "examples": [
+                "An airway may be compromised either because it cannot be kept open or because the airway protective reflexes (that stop inhalation) have been lost. Failure to keep the airway open will result either in intermittent total obstruction or in partial obstruction. This will manifest itself as snoring or bubbling sounds during breathing."
+            ]
+        },
+        "clinicalFindingTitle": {
+            "type": "string",
+            "title": "The Clinical Finding Title Schema",
+            "minLength": 1,
+            "examples": [
+                "Heces negras"
+            ]
+        },
+        "SNOMEDCT-expression": {
+            "type": "string",
+            "title": "A SNOMED CT pre-coordinated or post-coordinated expression.",
+            "minLength": 1,
+            "examples": [
+                "21522001:246454002=41847000"
+            ]
+        },
+        "discriminator": {
+            "type": "object",
+            "title": "The Discriminator Schema",
+            "required": [
+                "id",
+                "title",
+                "definition"
+            ],
+            "properties": {
+                "id": {
+                    "$ref": "#/definitions/SNOMEDCT-expression"
+                },
+                "title": {
+                    "$ref": "#/definitions/clinicalFindingTitle"
+                },
+                "definition": {
+                    "$ref": "#/definitions/definition"
+                },
+                "questions": {
+                    "$ref": "#/definitions/questions"
+                }
+            }
+        },
+        "nonDefaultLevel": {
+            "type": "object",
+            "title": "The Non-default Level Schema",
+            "required": [
+                "levelTitle",
+                "discriminators",
+                "advices"
+            ],
+            "properties": {
+                "levelTitle": {
+                    "$ref": "#/definitions/levelTitle"
+                },
+                "discriminators": {
+                    "type": "array",
+                    "title": "The Discriminators Schema",
+                    "items": {
+                        "$ref": "#/definitions/discriminator"
+                    }
+                },
+                "advices": {
+                    "$ref": "#/definitions/advices"
+                }
+            }
+        },
+        "defaultLevel": {
+            "type": "object",
+            "title": "The Default Level Schema",
+            "required": [
+                "levelTitle",
+                "advices"
+            ],
+            "properties": {
+                "levelTitle": {
+                    "$id": "#/properties/algorithm/properties/defaultLevel/properties/levelTitle",
+                    "$ref": "#/definitions/levelTitle"
+                },
+                "advices": {
+                    "$id": "#/properties/algorithm/properties/defaultLevel/properties/advices",
+                    "$ref": "#/definitions/advices"
+                }
+            }
+        }
+    },
+    "$id": "schema.json",
+    "type": "object",
+    "title": "The Root Schema",
+    "required": [
+        "chiefComplaint",
+        "algorithm"
+    ],
+    "properties": {
+        "chiefComplaint": {
+            "$id": "#/properties/chiefComplaint",
+            "type": "object",
+            "title": "The Chief Complaint Schema",
+            "required": [
+                "id",
+                "title"
+            ],
+            "properties": {
+                "id": {
+                    "$id": "#/properties/chiefComplaint/properties/id",
+                    "$ref": "#/definitions/SNOMEDCT-expression"
+                },
+                "title": {
+                    "$id": "#/properties/chiefComplaint/properties/title",
+                    "$ref": "#/definitions/clinicalFindingTitle"
+                }
+            }
+        },
+        "algorithm": {
+            "$id": "#/properties/algorithm",
+            "type": "object",
+            "title": "The Algorithm Schema",
+            "required": [
+                "defaultLevel"
+            ],
+            "properties": {
+                "criticalLevels": {
+                    "$id": "#/properties/algorithm/properties/criticalLevels",
+                    "type": "array",
+                    "title": "The Critical Levels Schema",
+                    "items": {
+                        "$id": "#/properties/algorithm/properties/criticalLevels/items",
+                        "$ref": "#/definitions/nonDefaultLevel"
+                    }
+                },
+                "intermediateLevels": {
+                    "$id": "#/properties/algorithm/properties/intermediateLevels",
+                    "type": "array",
+                    "title": "The Intermediate Levels Schema",
+                    "items": {
+                        "$id": "#/properties/algorithm/properties/intermediateLevels/items",
+                        "$ref": "#/definitions/nonDefaultLevel"
+                    }
+                },
+                "defaultLevel": {
+                    "$id": "#/properties/algorithm/properties/defaultLevel",
+                    "$ref": "#/definitions/defaultLevel"
+                }
+            }
+        }
+    }
+}
