@@ -1,3 +1,159 @@
-GET http://localhost:8080/
+POST http://localhost:8080/triage/
+Content-Type: application/json
+
+{
+    "triage": {
+        "chiefComplaint": {
+            "id": "21522001:246454002=41847000",
+            "title": "Dolor abdominal en adultos"
+        },
+        "algorithm": {
+            "criticalLevels": [
+                {
+                    "levelTitle": "FtF Now",
+                    "discriminators": [
+                        {
+                            "id": "90480005",
+                            "title": "Vía respiratoria comprometida",
+                            "definition": "An airway may be compromised either because it cannot be kept open or because the airway protective reflexes (that stop inhalation) have been lost. Failure to keep the airway open will result either in intermittent total obstruction or in partial obstruction. This will manifest itself as snoring or bubbling sounds during breathing.",
+                            "questions": [
+                                "Are they awake?",
+                                "Are they struggling to breathe?",
+                                "Can they get their breath in?",
+                                "Do they make a gurgling sound when they breathe?"
+                            ]
+                        },
+                        {
+                            "id": "300361008",
+                            "title": "Vómito con sangre",
+                            "definition": "Vomited blood may be fresh (bright or dark red) or coffee ground in appearance.",
+                            "questions": []
+                        }
+                    ],
+                    "advices": [
+                        "if unconscious place in the recovery position, if conscious try to reassure.",
+                        "Provide Life Support Advice if required.",
+                        "Take available analgesia for pain control.",
+                        "Keep sample of vomit/stool if possible."
+                    ]
+                }
+            ],
+            "intermediateLevels": [
+                {
+                    "levelTitle": "FtF Soon",
+                    "discriminators": [
+                        {
+                            "id": "267055007",
+                            "title": "Heces negras",
+                            "definition": "Something",
+                            "questions": []
+                        }
+                    ],
+                    "advices": [
+                        "Take available analgesia for pain control.",
+                        "Call back if symptoms worsen or concerned.",
+                        "Keep sample of stool if possible."
+                    ]
+                }
+            ],
+            "defaultLevel": {
+                "levelTitle": "Advice only",
+                "advices": [
+                    "Maintain uid intake – plenty of clear uids/consider oral rehydration therapy.",
+                    "Paracetamol qds for pain and temperature control.",
+                    "Rest.",
+                    "Refer to GP if symptoms persist.",
+                    "Call back if symptoms worsen or concerned."
+                ]
+            }
+        }
+    }
+}
+
+###
+
+GET http://localhost:8080/triage/
+
+###
+
+GET http://localhost:8080/triage/21522001:246454002=41847000
+
+###
+
+PUT http://localhost:8080/triage/
+Content-Type: application/json
+
+{
+    "triage": {
+        "chiefComplaint": {
+            "id": "21522001:246454002=41847000",
+            "title": "Dolor abdominal en adultos (actualizado)"
+        },
+        "algorithm": {
+            "criticalLevels": [
+                {
+                    "levelTitle": "FtF Now",
+                    "discriminators": [
+                        {
+                            "id": "90480005",
+                            "title": "Vía respiratoria comprometida",
+                            "definition": "An airway may be compromised either because it cannot be kept open or because the airway protective reflexes (that stop inhalation) have been lost. Failure to keep the airway open will result either in intermittent total obstruction or in partial obstruction. This will manifest itself as snoring or bubbling sounds during breathing.",
+                            "questions": [
+                                "Are they awake?",
+                                "Are they struggling to breathe?",
+                                "Can they get their breath in?",
+                                "Do they make a gurgling sound when they breathe?"
+                            ]
+                        },
+                        {
+                            "id": "300361008",
+                            "title": "Vómito con sangre",
+                            "definition": "Vomited blood may be fresh (bright or dark red) or coffee ground in appearance.",
+                            "questions": []
+                        }
+                    ],
+                    "advices": [
+                        "if unconscious place in the recovery position, if conscious try to reassure.",
+                        "Provide Life Support Advice if required.",
+                        "Take available analgesia for pain control.",
+                        "Keep sample of vomit/stool if possible."
+                    ]
+                }
+            ],
+            "intermediateLevels": [
+                {
+                    "levelTitle": "FtF Soon",
+                    "discriminators": [
+                        {
+                            "id": "267055007",
+                            "title": "Heces negras",
+                            "definition": "Something",
+                            "questions": []
+                        }
+                    ],
+                    "advices": [
+                        "Take available analgesia for pain control.",
+                        "Call back if symptoms worsen or concerned.",
+                        "Keep sample of stool if possible."
+                    ]
+                }
+            ],
+            "defaultLevel": {
+                "levelTitle": "Advice only",
+                "advices": [
+                    "Maintain uid intake – plenty of clear uids/consider oral rehydration therapy.",
+                    "Paracetamol qds for pain and temperature control.",
+                    "Rest.",
+                    "Refer to GP if symptoms persist.",
+                    "Call back if symptoms worsen or concerned."
+                ]
+            }
+        }
+    }
+}
+
+###
+
+DELETE http://localhost:8080/triage/21522001:246454002=418470004
 
 ###

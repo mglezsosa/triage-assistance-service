@@ -1,16 +1,11 @@
 package tech.sosa.triage_assistance_service.application;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.snomed.languages.scg.SCGQueryBuilder;
-import org.snomed.languages.scg.domain.model.Expression;
 import tech.sosa.triage_assistance_service.application.dto.AlgorithmDTO;
 import tech.sosa.triage_assistance_service.application.dto.AlgorithmLevelDTO;
 import tech.sosa.triage_assistance_service.application.dto.ClinicalFindingDTO;
@@ -27,14 +22,6 @@ import tech.sosa.triage_assistance_service.domain.model.TriageAlgorithm;
 
 public class TriageMapper {
 
-    private SCGQueryBuilder expressionBuilder;
-    private List<RuntimeException> failures;
-
-    public TriageMapper(SCGQueryBuilder expressionBuilder) {
-        this.expressionBuilder = expressionBuilder;
-        this.failures = new ArrayList<>();
-    }
-
     @SafeVarargs
     private static <E> Stream<E> concatStreams(Stream<E>... streams) {
         if (streams.length == 1) {
@@ -47,8 +34,6 @@ public class TriageMapper {
     }
 
     public Triage from(TriageDTO triageDTO) {
-        validateTriage(triageDTO);
-
         return new Triage(
                 parseChiefComplaint(triageDTO.chiefComplaint),
                 parseTriageAlgorithm(triageDTO.algorithm)
@@ -56,89 +41,19 @@ public class TriageMapper {
     }
 
     public ChiefComplaint buildChiefComplaint(String id, String title) {
-        ClinicalFindingDTO chiefCompDTO = new ClinicalFindingDTO(id, title);
-
-        RuntimeException e = validateChiefComplaint(chiefCompDTO);
-        if (null != e) {
-            throw e;
-        }
-
         return new ChiefComplaint(
-                new ClinicalFindingId(expressionBuilder.createQuery(id)),
+                new ClinicalFindingId(id),
                 new ClinicalFindingTitle(title));
     }
 
     private ChiefComplaint parseChiefComplaint(ClinicalFindingDTO clinicalFindingDTO) {
-        return new ChiefComplaint(
-                new ClinicalFindingId(expressionBuilder.createQuery(clinicalFindingDTO.id)),
-                new ClinicalFindingTitle(clinicalFindingDTO.title));
-    }
-
-    private void validateTriage(TriageDTO triageDTO) {
-        failures = new ArrayList<>();
-        failures.add(validateChiefComplaint(triageDTO.chiefComplaint));
-        failures.addAll(validateAlgorithm(triageDTO.algorithm));
-
-        failures = failures.stream().filter(Objects::nonNull).collect(Collectors.toList());
-
-        if (!failures.isEmpty()) {
-            RuntimeException r = new RuntimeException();
-            failures.forEach(r::addSuppressed);
-            throw r;
-        }
-    }
-
-    private Collection<RuntimeException> validateAlgorithm(AlgorithmDTO algorithm) {
-        AtomicInteger cIndex = new AtomicInteger();
-        AtomicInteger iIndex = new AtomicInteger();
-
-        Stream<RuntimeException> criticalStream = algorithm.criticalLevels.stream().flatMap(l ->
-                validateLevel(l, new StringBuilder("#/algorithm/criticalLevels/")
-                        .append(cIndex.getAndDecrement())).stream()
-        );
-
-        Stream<RuntimeException> intermediateStream = algorithm.intermediateLevels.stream()
-                .flatMap(l ->
-                        validateLevel(l, new StringBuilder("#/algorithm/intermediateLevels/")
-                                .append(iIndex.getAndDecrement())).stream()
-                );
-
-        return concatStreams(
-                criticalStream,
-                intermediateStream
-        ).collect(Collectors.toList());
-    }
-
-    private Collection<RuntimeException> validateLevel(
-            AlgorithmLevelDTO algorithmLevelDTO, StringBuilder stringBuilder) {
-        AtomicInteger index = new AtomicInteger();
-        return algorithmLevelDTO.discriminators.stream()
-                .map(d -> {
-                    try {
-                        expressionBuilder.createQuery(d.id);
-                    } catch (Exception e) {
-                        return new RuntimeException(
-                                stringBuilder.append("/discriminators/").append(index.get())
-                                        .append("/id").toString(),
-                                e);
-                    }
-                    return null;
-                }).collect(Collectors.toList());
-    }
-
-    private RuntimeException validateChiefComplaint(ClinicalFindingDTO chiefComplaint) {
-        try {
-            expressionBuilder.createQuery(chiefComplaint.id);
-        } catch (Exception e) {
-            return new RuntimeException("#/chiefComplaint/id", e);
-        }
-        return null;
+        return buildChiefComplaint(clinicalFindingDTO.id, clinicalFindingDTO.title);
     }
 
     public TriageDTO to(Triage triage) {
         return new TriageDTO(
                 new ClinicalFindingDTO(
-                        expressionToString(triage.chiefComplaint().id().value()),
+                        triage.chiefComplaint().id().value(),
                         triage.chiefComplaint().title().value()
                 ),
                 mapTriageAlgorithm(triage.algorithm())
@@ -185,20 +100,11 @@ public class TriageMapper {
 
     private DiscriminatorDTO mapDiscriminator(Discriminator discriminator) {
         return new DiscriminatorDTO(
-                expressionToString(discriminator.id().value()),
+                discriminator.id().value(),
                 discriminator.title().value(),
                 discriminator.definition(),
                 discriminator.questions()
         );
-    }
-
-    public String expressionToString(Expression chiefCompExp) {
-        return String.join("+", chiefCompExp.getFocusConcepts())
-                + Optional.ofNullable(chiefCompExp.getAttributes())
-                .map(attrs -> ":" + attrs.stream().map(
-                        a -> a.getAttributeId() + "=" + a.getAttributeValue().getConceptId()
-                        ).collect(Collectors.joining(","))
-                ).orElse("");
     }
 
     private TriageAlgorithm parseTriageAlgorithm(AlgorithmDTO algorithmDTO) {
@@ -226,7 +132,7 @@ public class TriageMapper {
 
     private Discriminator parseDiscriminator(DiscriminatorDTO discriminatorDTO) {
         return new Discriminator(
-                new ClinicalFindingId(expressionBuilder.createQuery(discriminatorDTO.id)),
+                new ClinicalFindingId(discriminatorDTO.id),
                 new ClinicalFindingTitle(discriminatorDTO.title),
                 discriminatorDTO.questions,
                 discriminatorDTO.definition

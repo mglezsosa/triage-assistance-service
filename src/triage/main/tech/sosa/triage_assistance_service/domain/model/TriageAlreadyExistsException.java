@@ -8,7 +8,8 @@ public class TriageAlreadyExistsException extends RuntimeException {
 
     public static TriageAlreadyExistsException withChiefComplaint(ChiefComplaint chiefComplaint) {
         return new TriageAlreadyExistsException(
-                String.format("Triage with chief complaint %s already exists.", chiefComplaint)
+                String.format("Triage with chief compaint with id '%s' already exists.",
+                        chiefComplaint.id.toString())
         );
     }
 }

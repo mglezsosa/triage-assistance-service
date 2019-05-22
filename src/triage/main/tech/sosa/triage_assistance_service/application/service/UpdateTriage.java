@@ -17,7 +17,7 @@ public class UpdateTriage {
     }
 
     public void execute(UpdateTriageRequest request) {
-        Triage updatedTriage = triageMapper.from(request.triageDTO);
+        Triage updatedTriage = triageMapper.from(request.triage);
 
         checkTriageExists(updatedTriage);
 

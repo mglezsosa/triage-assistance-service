@@ -8,7 +8,8 @@ public class TriageDoesNotExistException extends RuntimeException {
 
     public static TriageDoesNotExistException withChiefComplaint(ChiefComplaint chiefComplaint) {
         return new TriageDoesNotExistException(
-                String.format("Triage with chief compaint %s does not exist.", chiefComplaint)
+                String.format("Triage with chief compaint with id '%s' does not exist.",
+                        chiefComplaint.id.toString())
         );
     }
 }

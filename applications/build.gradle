@@ -6,6 +6,8 @@ plugins {
 dependencies {
     compile project(":src:triage")
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.4.RELEASE'
+    implementation 'com.github.everit-org:json-schema:1.11.1'
+    implementation 'com.github.IHTSDO:snomed-scg-parser:1.1.0'
 }
 
 bootJar {

@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import org.junit.Before;
 import org.junit.Test;
-import org.snomed.languages.scg.SCGObjectFactory;
-import org.snomed.languages.scg.SCGQueryBuilder;
 import tech.sosa.triage_assistance_service.application.TriageMapper;
 import tech.sosa.triage_assistance_service.application.dto.TriageDTO;
 import tech.sosa.triage_assistance_service.domain.model.Triage;
@@ -27,7 +25,7 @@ public class UpdateTriageShould extends TestWithUtils {
     @Before
     public void setUp() throws URISyntaxException, IOException {
 
-        triageMapper = new TriageMapper(new SCGQueryBuilder(new SCGObjectFactory()));
+        triageMapper = new TriageMapper();
 
         updatedSource = readFromResource("updatedTriageExample.json");
         String notUpdatedSource = readFromResource("triageExample.json");
