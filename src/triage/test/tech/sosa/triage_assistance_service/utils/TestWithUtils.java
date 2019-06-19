@@ -17,7 +17,7 @@ import org.json.JSONObject;
 
 public class TestWithUtils {
 
-    private ObjectMapper objectMapper = new ObjectMapper().registerModule(new Jdk8Module());
+    protected ObjectMapper objectMapper = new ObjectMapper().registerModule(new Jdk8Module());
 
     protected String readFromResource(String resource) throws URISyntaxException, IOException {
         Path path = Paths.get(Objects.requireNonNull(getClass().getClassLoader()

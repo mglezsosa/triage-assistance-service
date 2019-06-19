@@ -2,6 +2,9 @@ package tech.sosa.triage_assistance_service.domain.model;
 
 import java.util.Collection;
 import java.util.Objects;
+import tech.sosa.triage_assistance_service.domain.event.CriticalCheckTriageAssessed;
+import tech.sosa.triage_assistance_service.domain.event.FullTriageAssessed;
+import tech.sosa.triage_assistance_service.util.event.EventPublisher;
 
 public class Triage {
 
@@ -14,8 +17,33 @@ public class Triage {
         this.algorithm = algorithm;
     }
 
-    public TriageOutput assess(Collection<ClinicalFinding> findings) {
-        return algorithm.evaluate(findings);
+    public AlgorithmLevel fullyAssess(Collection<ClinicalFinding> findings) {
+        return fullyAssess(findings, null);
+    }
+
+    public AlgorithmLevel fullyAssess(
+            Collection<ClinicalFinding> findings,
+            CriticalCheckTriageAssessed previousAssessment) {
+        AlgorithmLevel level = algorithm.evaluate(findings);
+
+        EventPublisher.instance().publish(new FullTriageAssessed(
+                this.chiefComplaint.id().value(),
+                this.chiefComplaint.title().value(),
+                level.title().value(),
+                previousAssessment
+        ));
+
+        return level;
+    }
+
+    public CriticalCheckAssesmentOutput checkForCriticalState(Collection<ClinicalFinding> findings) {
+        CriticalCheckAssesmentOutput output = CriticalCheckAssesmentOutput.fromAlgorithmLevel(
+                algorithm.criticalStateSubalgorithm().evaluate(findings)
+        );
+
+        EventPublisher.instance().publish(CriticalCheckTriageAssessed.create(chiefComplaint, output));
+
+        return output;
     }
 
     public ChiefComplaint chiefComplaint() {

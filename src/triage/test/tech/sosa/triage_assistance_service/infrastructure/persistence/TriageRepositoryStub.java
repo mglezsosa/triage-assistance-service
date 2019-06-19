@@ -1,4 +1,4 @@
-package tech.sosa.triage_assistance_service.infrastructure;
+package tech.sosa.triage_assistance_service.infrastructure.persistence;
 
 import java.util.stream.Stream;
 import tech.sosa.triage_assistance_service.domain.model.Triage;

@@ -1,8 +1,9 @@
 package tech.sosa.triage_assistance_service.application.service;
 
+import tech.sosa.triage_assistance_service.application.ApplicationRequest;
 import tech.sosa.triage_assistance_service.application.dto.TriageDTO;
 
-public class UpdateTriageRequest {
+public class UpdateTriageRequest implements ApplicationRequest {
 
     public TriageDTO triage;
 

@@ -1,12 +1,13 @@
 package tech.sosa.triage_assistance_service.application.service;
 
+import tech.sosa.triage_assistance_service.application.ApplicationService;
 import tech.sosa.triage_assistance_service.application.TriageMapper;
 import tech.sosa.triage_assistance_service.domain.model.ChiefComplaint;
 import tech.sosa.triage_assistance_service.domain.model.Triage;
 import tech.sosa.triage_assistance_service.domain.model.TriageDoesNotExistException;
 import tech.sosa.triage_assistance_service.domain.model.TriageRepository;
 
-public class DeleteTriage {
+public class DeleteTriage implements ApplicationService<Void, DeleteTriageRequest> {
 
     private final TriageRepository triageRepository;
     private final TriageMapper mapper;
@@ -16,7 +17,7 @@ public class DeleteTriage {
         this.mapper = mapper;
     }
 
-    public void execute(DeleteTriageRequest request) {
+    public Void execute(DeleteTriageRequest request) {
 
         ChiefComplaint reqTriageChiefComplaint = mapper.buildChiefComplaint(
                 request.chiefComplaintId, null);
@@ -26,6 +27,8 @@ public class DeleteTriage {
         checkTriageExists(reqTriageChiefComplaint, requestedTriage);
 
         triageRepository.delete(requestedTriage);
+
+        return null;
     }
 
     private void checkTriageExists(ChiefComplaint reqTriageChiefComplaint, Triage requestedTriage) {

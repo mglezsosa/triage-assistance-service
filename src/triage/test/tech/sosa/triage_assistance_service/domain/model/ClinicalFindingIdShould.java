@@ -1,6 +1,7 @@
 package tech.sosa.triage_assistance_service.domain.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -27,9 +28,10 @@ public class ClinicalFindingIdShould {
                         + "{363699004=304120007,260686004=257867005}",
                 clinicalFindingId1.toString());
 
-        assertEquals("71388002:{260686004=129304002,405813007=15497006},"
-                        + "{260686004=129304002,405813007=31435000}",
-                clinicalFindingId2.toString());
-    }
+        assertTrue(clinicalFindingId2.toString().equals("71388002:{260686004=129304002,405813007=15497006},"
+                + "{260686004=129304002,405813007=31435000}") ||
+                clinicalFindingId2.toString().equals("71388002:{260686004=129304002,405813007=31435000},"
+                + "{260686004=129304002,405813007=15497006}"));
+        }
 
 }

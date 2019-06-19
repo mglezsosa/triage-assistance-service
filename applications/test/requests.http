@@ -154,6 +154,83 @@ Content-Type: application/json
 
 ###
 
-DELETE http://localhost:8080/triage/21522001:246454002=418470004
+DELETE http://localhost:8080/triage/21522001:246454002=41847000
+
+###
+
+POST http://localhost:8080/triage/critical-only
+Content-Type: application/json
+
+{
+    "triageChiefComplaintId": "21522001:246454002=41847000",
+    "findingIds": [
+        "267055007"
+    ]
+}
+
+###
+
+POST http://localhost:8080/triage/critical-only
+Content-Type: application/json
+
+{
+    "triageChiefComplaintId": "21522001:246454002=41847000",
+    "findingIds": [
+        "90480005"
+    ]
+}
+
+###
+
+POST http://localhost:8080/triage/critical-only
+Content-Type: application/json
+
+{
+    "triageChiefComplaintId": "21522001:246454002=41847000",
+    "findingIds": [
+        "161891005", "418290006 |prurito (hallazgo)| : 363698007 |sitio del hallazgo (atributo)| = 81745001"
+    ]
+}
+
+###
+
+GET http://localhost:8080/triage/next-enqueued
+
+###
+
+POST http://localhost:8080/triage/full
+Content-Type: application/json
+
+{
+    "triageChiefComplaintId": "21522001:246454002=41847000",
+    "findingIds": [
+        "267055007"
+    ]
+}
+
+###
+
+POST http://localhost:8080/triage/full
+Content-Type: application/json
+
+{
+    "triageChiefComplaintId": "21522001:246454002=41847000",
+    "findingIds": [
+        "90480005"
+    ]
+}
+
+###
+
+POST http://localhost:8080/triage/full
+Content-Type: application/json
+
+{
+    "previousPreTriageId": "c1fcce27-b2ad-439d-bb41-7a778d2f78a5",
+    "triageChiefComplaintId": "21522001:246454002=41847000",
+    "findingIds": [
+        "161891005", "418290006 |prurito (hallazgo)| : 363698007 |sitio del hallazgo (atributo)| = 81745001"
+    ]
+}
 
 ###

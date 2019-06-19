@@ -11,7 +11,7 @@ import tech.sosa.triage_assistance_service.application.TriageMapper;
 import tech.sosa.triage_assistance_service.application.dto.TriageDTO;
 import tech.sosa.triage_assistance_service.domain.model.Triage;
 import tech.sosa.triage_assistance_service.domain.model.TriageRepository;
-import tech.sosa.triage_assistance_service.infrastructure.TriageRepositoryStub;
+import tech.sosa.triage_assistance_service.infrastructure.persistence.TriageRepositoryStub;
 import tech.sosa.triage_assistance_service.utils.TestWithUtils;
 
 public class DeleteTriageShould extends TestWithUtils {

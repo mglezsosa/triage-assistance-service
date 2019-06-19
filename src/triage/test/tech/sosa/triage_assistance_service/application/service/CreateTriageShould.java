@@ -12,7 +12,7 @@ import tech.sosa.triage_assistance_service.application.dto.TriageDTO;
 import tech.sosa.triage_assistance_service.domain.model.ChiefComplaint;
 import tech.sosa.triage_assistance_service.domain.model.ClinicalFindingId;
 import tech.sosa.triage_assistance_service.domain.model.TriageRepository;
-import tech.sosa.triage_assistance_service.infrastructure.TriageRepositoryStub;
+import tech.sosa.triage_assistance_service.infrastructure.persistence.TriageRepositoryStub;
 import tech.sosa.triage_assistance_service.utils.TestWithUtils;
 
 public class CreateTriageShould extends TestWithUtils {

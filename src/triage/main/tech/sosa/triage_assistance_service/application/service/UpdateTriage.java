@@ -1,11 +1,12 @@
 package tech.sosa.triage_assistance_service.application.service;
 
+import tech.sosa.triage_assistance_service.application.ApplicationService;
 import tech.sosa.triage_assistance_service.application.TriageMapper;
 import tech.sosa.triage_assistance_service.domain.model.Triage;
 import tech.sosa.triage_assistance_service.domain.model.TriageDoesNotExistException;
 import tech.sosa.triage_assistance_service.domain.model.TriageRepository;
 
-public class UpdateTriage {
+public class UpdateTriage implements ApplicationService<Void, UpdateTriageRequest> {
 
     private TriageRepository triageRepo;
     private TriageMapper triageMapper;
@@ -16,12 +17,14 @@ public class UpdateTriage {
         this.triageMapper = triageMapper;
     }
 
-    public void execute(UpdateTriageRequest request) {
+    public Void execute(UpdateTriageRequest request) {
         Triage updatedTriage = triageMapper.from(request.triage);
 
         checkTriageExists(updatedTriage);
 
         triageRepo.save(updatedTriage);
+
+        return null;
     }
 
     private void checkTriageExists(Triage updatedTriage) {

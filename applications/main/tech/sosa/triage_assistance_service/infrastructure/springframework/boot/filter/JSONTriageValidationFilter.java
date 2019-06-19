@@ -19,7 +19,7 @@ import org.springframework.http.HttpStatus;
 import tech.sosa.triage_assistance_service.infrastructure.util.MultiReadHttpServletRequest;
 
 
-@Order(1)
+@Order(3)
 public class JSONTriageValidationFilter implements Filter {
 
     private Schema jsonSchema;
@@ -33,7 +33,10 @@ public class JSONTriageValidationFilter implements Filter {
             throws IOException, ServletException {
         MultiReadHttpServletRequest multiReadRequest = new MultiReadHttpServletRequest(
                 (HttpServletRequest) request);
-        if (Arrays.asList("POST", "PUT").contains(multiReadRequest.getMethod())) {
+
+        if (!Arrays.asList("/triage/full", "/triage/critical-only", "/triage/next-enqueued")
+                .contains(multiReadRequest.getServletPath()) &&
+                Arrays.asList("POST", "PUT").contains(multiReadRequest.getMethod())) {
             try {
                 var json = new JSONObject(
                         new JSONTokener(multiReadRequest.getInputStream())
@@ -44,6 +47,7 @@ public class JSONTriageValidationFilter implements Filter {
                 res.setStatus(HttpStatus.BAD_REQUEST.value());
                 res.setHeader("Content-type", "application/json");
                 res.getWriter().write(e.toJSON().toString());
+                return;
             }
         }
         chain.doFilter(multiReadRequest, response);

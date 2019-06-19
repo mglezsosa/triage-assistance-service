@@ -11,7 +11,7 @@ import org.junit.Test;
 import tech.sosa.triage_assistance_service.application.TriageMapper;
 import tech.sosa.triage_assistance_service.application.dto.TriageDTO;
 import tech.sosa.triage_assistance_service.domain.model.TriageRepository;
-import tech.sosa.triage_assistance_service.infrastructure.TriageRepositoryStub;
+import tech.sosa.triage_assistance_service.infrastructure.persistence.TriageRepositoryStub;
 import tech.sosa.triage_assistance_service.utils.TestWithUtils;
 
 public class ViewAllTriagesShould extends TestWithUtils {
@@ -38,7 +38,7 @@ public class ViewAllTriagesShould extends TestWithUtils {
 
     @Test
     public void return_a_dto_collection_of_all_existing_triages() {
-        Collection<TriageDTO> output = new ViewAllTriages(triageRepo, triageMapper).execute();
+        Collection<TriageDTO> output = new ViewAllTriages(triageRepo, triageMapper).execute(null);
         assertTrue(equalsIgnoreOrder(output, Arrays.asList(triage2, triage1)));
     }
 

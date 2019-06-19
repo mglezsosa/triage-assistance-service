@@ -2,6 +2,7 @@ dependencies {
     // Prod
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
     implementation 'com.github.IHTSDO:snomed-scg-parser:1.1.0'
+    compileOnly 'javax.servlet:servlet-api:2.5'
 
     // Test
     testCompile group: 'junit', name: 'junit', version: '4.12'

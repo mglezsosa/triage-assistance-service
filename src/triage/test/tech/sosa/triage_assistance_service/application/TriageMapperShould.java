@@ -117,4 +117,5 @@ public class TriageMapperShould extends TestWithUtils {
 
         assertEquals(expectedTriageDTO, actualTriageDTO);
     }
+
 }

@@ -1,6 +1,8 @@
 package tech.sosa.triage_assistance_service.application.service;
 
-public class DeleteTriageRequest {
+import tech.sosa.triage_assistance_service.application.ApplicationRequest;
+
+public class DeleteTriageRequest implements ApplicationRequest {
 
     public final String chiefComplaintId;
 

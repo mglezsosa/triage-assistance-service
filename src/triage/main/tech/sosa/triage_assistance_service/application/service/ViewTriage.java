@@ -1,5 +1,6 @@
 package tech.sosa.triage_assistance_service.application.service;
 
+import tech.sosa.triage_assistance_service.application.ApplicationService;
 import tech.sosa.triage_assistance_service.application.TriageMapper;
 import tech.sosa.triage_assistance_service.application.dto.TriageDTO;
 import tech.sosa.triage_assistance_service.domain.model.ChiefComplaint;
@@ -7,7 +8,7 @@ import tech.sosa.triage_assistance_service.domain.model.Triage;
 import tech.sosa.triage_assistance_service.domain.model.TriageDoesNotExistException;
 import tech.sosa.triage_assistance_service.domain.model.TriageRepository;
 
-public class ViewTriage {
+public class ViewTriage implements ApplicationService<TriageDTO, ViewTriageRequest> {
 
     private TriageRepository triageRepo;
     private TriageMapper triageMapper;

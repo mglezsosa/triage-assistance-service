@@ -87,7 +87,7 @@ public class TriageMapper {
                 .collect(Collectors.toList());
     }
 
-    private AlgorithmLevelDTO mapAlgorithmLevel(AlgorithmLevel algorithmLevel) {
+    public AlgorithmLevelDTO mapAlgorithmLevel(AlgorithmLevel algorithmLevel) {
         return new AlgorithmLevelDTO(
                 algorithmLevel.title().value(),
                 algorithmLevel.advices(),
