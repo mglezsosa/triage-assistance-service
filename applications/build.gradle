@@ -4,12 +4,16 @@ plugins {
 }
 
 dependencies {
-    compile project(":src:triage")
+    compile project(":triage-evaluations")
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.4.RELEASE'
     implementation 'com.github.everit-org:json-schema:1.11.1'
     implementation 'com.github.IHTSDO:snomed-scg-parser:1.1.0'
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jdk8', version: '2.9.8'
     compile 'org.mongodb:mongodb-driver-sync:3.10.1'
+
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-websocket', version: '2.1.6.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-amqp', version: '2.1.6.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-reactor-netty', version: '2.1.6.RELEASE'
 }
 
 bootJar {

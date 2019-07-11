@@ -160,6 +160,7 @@ DELETE http://localhost:8080/triage/21522001:246454002=41847000
 
 POST http://localhost:8080/triage/critical-only
 Content-Type: application/json
+Authorization: Bearer token-admin
 
 {
     "triageChiefComplaintId": "21522001:246454002=41847000",

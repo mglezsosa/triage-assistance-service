@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="triage_assistance_service.security.main" target="11" />
+      <module name="triage_assistance_service.security.test" target="11" />
+      <module name="triage_assistance_service.src.com.main" target="11" />
+      <module name="triage_assistance_service.src.com.test" target="11" />
+      <module name="triage_assistance_service.src.common.main" target="11" />
+      <module name="triage_assistance_service.src.common.test" target="11" />
+      <module name="triage_assistance_service.src.main" target="11" />
+      <module name="triage_assistance_service.src.shared.main" target="11" />
+      <module name="triage_assistance_service.src.shared.test" target="11" />
+      <module name="triage_assistance_service.src.test" target="11" />
+      <module name="triage_assistance_service.src.triage-evaluations.main" target="11" />
+      <module name="triage_assistance_service.src.triage-evaluations.test" target="11" />
+      <module name="triage_assistance_service.src.triage.main" target="11" />
+      <module name="triage_assistance_service.src.triage.test" target="11" />
+      <module name="triage_assistance_service.src_.main" target="11" />
+      <module name="triage_assistance_service.src_.test" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
