@@ -1,7 +1,7 @@
-package tech.sosa.triage_assistance_service.shared.application.service;
+package tech.sosa.triage_assistance_service.identity_access.application.service;
 
-import tech.sosa.triage_assistance_service.identity_access.application.service.Authorize;
-import tech.sosa.triage_assistance_service.identity_access.application.service.AuthorizeRequest;
+import tech.sosa.triage_assistance_service.shared.application.service.ApplicationRequest;
+import tech.sosa.triage_assistance_service.shared.application.service.ApplicationService;
 
 public class SecuredApplicationService<S, T extends ApplicationRequest> implements ApplicationService<S, T> {
 
