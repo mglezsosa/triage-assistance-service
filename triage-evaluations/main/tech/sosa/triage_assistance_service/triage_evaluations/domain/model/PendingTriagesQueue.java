@@ -8,5 +8,6 @@ public interface PendingTriagesQueue {
     CriticalCheckTriageAssessed findInProcessOrFail(String id);
     CriticalCheckTriageAssessed nextPending();
     void finish(CriticalCheckTriageAssessed assessing);
+    long numberOfEnqueuedCases();
 
 }

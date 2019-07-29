@@ -1,4 +1,4 @@
-package tech.sosa.triage_assistance_service.applications.springframework.boot.controller;
+package tech.sosa.triage_assistance_service.applications.infrastructure.springframework.boot.controller;
 
 import java.util.Collection;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +56,7 @@ public class TriageController {
         String authInfo = authHeader.substring(7);
 
         return new SecuredApplicationService<>(
-                new CheckForCriticalState(repository),
+                new CheckForCriticalState(repository, queue),
                 authorizeUseCase,
                 new AuthorizeRequest(
                         authInfo,

@@ -1,4 +1,4 @@
-package tech.sosa.triage_assistance_service.applications.springframework.boot;
+package tech.sosa.triage_assistance_service.applications.infrastructure.springframework.boot;
 
 import java.util.Arrays;
 import org.springframework.boot.CommandLineRunner;
@@ -6,8 +6,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 public class App {

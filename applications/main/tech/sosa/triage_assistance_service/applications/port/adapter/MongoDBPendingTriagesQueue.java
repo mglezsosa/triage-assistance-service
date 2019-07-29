@@ -107,4 +107,11 @@ public class MongoDBPendingTriagesQueue implements PendingTriagesQueue {
             throw new NoSuchElementException("No value present");
         }
     }
+
+    @Override
+    public long numberOfEnqueuedCases() {
+        return collection.countDocuments(
+                eq("status", StatefulCriticalCheckTriageAssessed.Status.PENDING.toString())
+        );
+    }
 }

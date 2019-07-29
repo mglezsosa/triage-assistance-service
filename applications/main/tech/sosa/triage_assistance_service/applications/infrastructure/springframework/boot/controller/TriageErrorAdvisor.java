@@ -1,4 +1,4 @@
-package tech.sosa.triage_assistance_service.applications.springframework.boot.controller;
+package tech.sosa.triage_assistance_service.applications.infrastructure.springframework.boot.controller;
 
 import org.json.JSONObject;
 import org.snomed.languages.scg.SCGException;

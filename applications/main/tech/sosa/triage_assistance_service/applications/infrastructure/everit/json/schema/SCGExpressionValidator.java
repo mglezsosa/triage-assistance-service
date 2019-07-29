@@ -1,4 +1,4 @@
-package tech.sosa.triage_assistance_service.applications.everit.json.schema;
+package tech.sosa.triage_assistance_service.applications.infrastructure.everit.json.schema;
 
 import java.util.Optional;
 import org.everit.json.schema.FormatValidator;

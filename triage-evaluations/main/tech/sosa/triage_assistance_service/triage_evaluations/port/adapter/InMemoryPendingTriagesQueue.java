@@ -39,4 +39,11 @@ public class InMemoryPendingTriagesQueue implements PendingTriagesQueue {
         events.removeIf(e -> e.getId().equals(assessing.getId()));
     }
 
+    @Override
+    public long numberOfEnqueuedCases() {
+        return events.stream().filter(e ->
+                e.getStatus() == StatefulCriticalCheckTriageAssessed.Status.PENDING)
+                .count();
+    }
+
 }

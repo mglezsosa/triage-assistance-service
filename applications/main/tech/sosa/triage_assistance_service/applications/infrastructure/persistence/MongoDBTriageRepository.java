@@ -1,4 +1,4 @@
-package tech.sosa.triage_assistance_service.applications.persistence;
+package tech.sosa.triage_assistance_service.applications.infrastructure.persistence;
 
 import static com.mongodb.client.model.Filters.eq;
 

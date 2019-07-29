@@ -10,6 +10,7 @@ dependencies {
     implementation 'com.github.IHTSDO:snomed-scg-parser:1.1.0'
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jdk8', version: '2.9.8'
     compile 'org.mongodb:mongodb-driver-sync:3.10.1'
+    compile group: 'com.rabbitmq', name: 'amqp-client', version: '5.7.3'
 
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-websocket', version: '2.1.6.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-amqp', version: '2.1.6.RELEASE'

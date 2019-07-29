@@ -1,4 +1,4 @@
-package tech.sosa.triage_assistance_service.applications.springframework.boot.filter;
+package tech.sosa.triage_assistance_service.applications.infrastructure.springframework.boot.filter;
 
 import java.io.IOException;
 import java.util.Arrays;

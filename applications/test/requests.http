@@ -227,7 +227,7 @@ POST http://localhost:8080/triage/full
 Content-Type: application/json
 
 {
-    "previousPreTriageId": "c1fcce27-b2ad-439d-bb41-7a778d2f78a5",
+    "previousPreTriageId": "9f937903-d2a7-47a6-8dab-9a28dff1529b",
     "triageChiefComplaintId": "21522001:246454002=41847000",
     "findingIds": [
         "161891005", "418290006 |prurito (hallazgo)| : 363698007 |sitio del hallazgo (atributo)| = 81745001"

@@ -1,10 +1,18 @@
-package tech.sosa.triage_assistance_service.applications.springframework.boot;
+package tech.sosa.triage_assistance_service.applications.infrastructure.springframework.boot;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+
+import java.io.IOException;
 import java.util.Objects;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Logger;
+
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONObject;
@@ -12,16 +20,11 @@ import org.json.JSONTokener;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import tech.sosa.triage_assistance_service.applications.everit.json.schema.SCGExpressionValidator;
-import tech.sosa.triage_assistance_service.applications.persistence.MongoDBTriageRepository;
+import tech.sosa.triage_assistance_service.applications.infrastructure.everit.json.schema.SCGExpressionValidator;
+import tech.sosa.triage_assistance_service.applications.infrastructure.persistence.MongoDBTriageRepository;
+import tech.sosa.triage_assistance_service.applications.infrastructure.springframework.boot.filter.EventPublisherResetFilter;
+import tech.sosa.triage_assistance_service.applications.infrastructure.springframework.boot.filter.JSONTriageValidationFilter;
 import tech.sosa.triage_assistance_service.applications.port.adapter.MongoDBPendingTriagesQueue;
-import tech.sosa.triage_assistance_service.applications.springframework.boot.filter.EventPublisherResetFilter;
-import tech.sosa.triage_assistance_service.applications.springframework.boot.filter.JSONTriageValidationFilter;
 import tech.sosa.triage_assistance_service.identity_access.application.service.Authorize;
 import tech.sosa.triage_assistance_service.identity_access.domain.model.AuthService;
 import tech.sosa.triage_assistance_service.triage_evaluations.application.TriageMapper;
@@ -80,7 +83,7 @@ public class Config {
     }
 
     @Bean
-    public PendingTriagesQueue inMemoryQueue() {
+    public PendingTriagesQueue pendingCasesQueue() {
         return new MongoDBPendingTriagesQueue(
                 jsonMapper(),
                 mongoClient()
@@ -90,7 +93,8 @@ public class Config {
     }
 
     @Bean
-    public FilterRegistrationBean<EventPublisherResetFilter> eventPublisherResetFilterFilter() {
+    public FilterRegistrationBean<EventPublisherResetFilter> eventPublisherResetFilterFilter()
+            throws IOException, TimeoutException {
         FilterRegistrationBean<EventPublisherResetFilter> registrationBean
                 = new FilterRegistrationBean<>();
 
@@ -98,7 +102,8 @@ public class Config {
                 new LoggingEventStore(
                         jsonMapper()
                 ),
-                inMemoryQueue()
+                pendingCasesQueue(),
+                rabbitMQChannel()
         ));
 
         registrationBean.addUrlPatterns("/*");
@@ -128,6 +133,27 @@ public class Config {
 //    @Bean
 //    public TriageRepository inMemoryTriageRepository() {
 //        return new InMemoryTriageRepository();
-//    }
+//    }\
+
+    @Bean
+    public ConnectionFactory rabbitMQConnectionFactory() {
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+        factory.setPort(5672);
+        factory.setUsername("guest");
+        factory.setPassword("guest");
+        return factory;
+    }
+
+    @Bean
+    public Connection rabbitMQConnection() throws IOException, TimeoutException {
+        Connection connection = rabbitMQConnectionFactory().newConnection();
+        return connection;
+    }
+
+    @Bean
+    public Channel rabbitMQChannel() throws IOException, TimeoutException {
+        return rabbitMQConnection().createChannel();
+    }
 
 }

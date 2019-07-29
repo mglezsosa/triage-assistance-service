@@ -12,7 +12,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.event.AuditingCriticalCheckTriageAssessedSubscriber;
-import tech.sosa.triage_assistance_service.triage_evaluations.domain.event.NonCriticalAssessingEqueuerSubscriber;
 import tech.sosa.triage_assistance_service.triage_evaluations.port.adapter.InMemoryPendingTriagesQueue;
 import tech.sosa.triage_assistance_service.identity_access.port.adapter.LoggingEventStore;
 import tech.sosa.triage_assistance_service.shared.domain.event.EventPublisher;
@@ -25,7 +24,6 @@ public class TriageShould extends TestWithUtils {
     private AlgorithmLevel ftfNow;
     private AlgorithmLevel ftfSoon;
     private AlgorithmLevel adviceOnly;
-    private PendingTriagesQueue queue;
 
     @Before
     public void setUp() {
@@ -96,18 +94,9 @@ public class TriageShould extends TestWithUtils {
                 ))
         );
 
-        EventPublisher.instance().reset();
-
-        EventPublisher.instance().subscribe(new AuditingCriticalCheckTriageAssessedSubscriber(
-                new LoggingEventStore(objectMapper)
-        ));
-
-        queue = new InMemoryPendingTriagesQueue(new ArrayList<>());
-
-        EventPublisher.instance().subscribe(new NonCriticalAssessingEqueuerSubscriber(queue));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void return_FtFNow_level_on_full_assessment() {
 
         Collection<ClinicalFinding> mostCriticalFinding = Collections.singletonList(
@@ -115,11 +104,9 @@ public class TriageShould extends TestWithUtils {
         );
 
         assertEquals(ftfNow, aTriage.fullyAssess(mostCriticalFinding));
-
-        queue.nextPending();
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void return_FtFSoon_level_on_full_assessment() {
 
         Collection<ClinicalFinding> mostCriticalFinding = Collections.singletonList(
@@ -127,11 +114,9 @@ public class TriageShould extends TestWithUtils {
         );
 
         assertEquals(ftfSoon, aTriage.fullyAssess(mostCriticalFinding));
-
-        queue.nextPending();
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void return_AdviceOnly_level_on_full_assessment() {
 
         Collection<ClinicalFinding> noFindings = Collections.emptyList();
@@ -144,8 +129,6 @@ public class TriageShould extends TestWithUtils {
 
         assertEquals(adviceOnly, aTriage.fullyAssess(noFindings));
         assertEquals(adviceOnly, aTriage.fullyAssess(notApplicableFindings));
-
-        queue.nextPending();
     }
 
     @Test
@@ -167,31 +150,17 @@ public class TriageShould extends TestWithUtils {
                 new CriticalCheckAssesmentOutput(false, null),
                 aTriage.checkForCriticalState(mostCriticalFinding));
 
-        Assert.assertEquals(
-                new CriticalCheckAssesmentOutput(false, null),
-                queue.nextPending().getOutput()
-        );
-
         assertEquals(
                 new CriticalCheckAssesmentOutput(false, null),
                 aTriage.checkForCriticalState(noFindings));
-
-        Assert.assertEquals(
-                new CriticalCheckAssesmentOutput(false, null),
-                queue.nextPending().getOutput()
-        );
 
         assertEquals(
                 new CriticalCheckAssesmentOutput(false, null),
                 aTriage.checkForCriticalState(notApplicableFindings));
 
-        Assert.assertEquals(
-                new CriticalCheckAssesmentOutput(false, null),
-                queue.nextPending().getOutput()
-        );
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void return_truthy_on_critical_state_checking() {
         Collection<ClinicalFinding> mostCriticalFinding = Collections.singletonList(
                 new ClinicalFinding(new ClinicalFindingId("90480005"), null)
@@ -203,7 +172,5 @@ public class TriageShould extends TestWithUtils {
                 new CriticalCheckAssesmentOutput(true, ftfNow.advices()),
                 output
         );
-
-        queue.nextPending();
     }
 }

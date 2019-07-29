@@ -1,8 +1,10 @@
 package tech.sosa.triage_assistance_service.triage_evaluations.application.service;
 
 import tech.sosa.triage_assistance_service.shared.application.service.ApplicationService;
+import tech.sosa.triage_assistance_service.shared.domain.event.EventPublisher;
 import tech.sosa.triage_assistance_service.triage_evaluations.application.NullRequest;
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.event.CriticalCheckTriageAssessed;
+import tech.sosa.triage_assistance_service.triage_evaluations.domain.event.PendingCasesQueueSizeChanged;
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.PendingTriagesQueue;
 
 public class NextEnqueuedTriage implements
@@ -16,6 +18,11 @@ public class NextEnqueuedTriage implements
 
     @Override
     public CriticalCheckTriageAssessed execute(NullRequest request) {
-        return queue.nextPending();
+
+        CriticalCheckTriageAssessed criticalCheckTriageAssessed = queue.nextPending();
+
+        EventPublisher.instance().publish(new PendingCasesQueueSizeChanged());
+
+        return criticalCheckTriageAssessed;
     }
 }

@@ -2,21 +2,20 @@ package tech.sosa.triage_assistance_service.triage_evaluations.application.servi
 
 import java.util.stream.Collectors;
 import tech.sosa.triage_assistance_service.shared.application.service.ApplicationService;
-import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.ChiefComplaint;
-import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.ClinicalFinding;
-import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.ClinicalFindingId;
-import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.CriticalCheckAssesmentOutput;
-import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.Triage;
-import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.TriageDoesNotExistException;
-import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.TriageRepository;
+import tech.sosa.triage_assistance_service.shared.domain.event.EventPublisher;
+import tech.sosa.triage_assistance_service.triage_evaluations.domain.event.PendingCasesQueueSizeChanged;
+import tech.sosa.triage_assistance_service.triage_evaluations.domain.event.CriticalCheckTriageAssessed;
+import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.*;
 
 public class CheckForCriticalState
         implements ApplicationService<CriticalCheckAssesmentOutput, CheckForCriticalStateRequest> {
 
     private final TriageRepository repository;
+    private final PendingTriagesQueue queue;
 
-    public CheckForCriticalState(TriageRepository repository) {
+    public CheckForCriticalState(TriageRepository repository, PendingTriagesQueue queue) {
         this.repository = repository;
+        this.queue = queue;
     }
 
     public CriticalCheckAssesmentOutput execute(CheckForCriticalStateRequest request) {
@@ -29,10 +28,17 @@ public class CheckForCriticalState
             throw TriageDoesNotExistException.withChiefComplaint(selectedChiefComplaint);
         }
 
-        return selectedTriage.checkForCriticalState(
+        CriticalCheckAssesmentOutput output = selectedTriage.checkForCriticalState(
                 request.findingIds.parallelStream().map(fStr -> new ClinicalFinding(
                         new ClinicalFindingId(fStr), null)).collect(Collectors.toList())
         );
+
+        if (!output.hasCriticalState) {
+            queue.enqueue(CriticalCheckTriageAssessed.create(selectedTriage.chiefComplaint(), output));
+            EventPublisher.instance().publish(new PendingCasesQueueSizeChanged());
+        }
+
+        return output;
     }
 
 }
