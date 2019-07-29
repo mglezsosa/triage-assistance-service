@@ -8,7 +8,6 @@ import com.mongodb.client.MongoClients;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.TimeoutException;
-import java.util.logging.Logger;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -17,13 +16,10 @@ import org.everit.json.schema.Schema;
 import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import tech.sosa.triage_assistance_service.applications.infrastructure.everit.json.schema.SCGExpressionValidator;
 import tech.sosa.triage_assistance_service.applications.infrastructure.persistence.MongoDBTriageRepository;
-import tech.sosa.triage_assistance_service.applications.infrastructure.springframework.boot.filter.EventPublisherResetFilter;
-import tech.sosa.triage_assistance_service.applications.infrastructure.springframework.boot.filter.JSONTriageValidationFilter;
 import tech.sosa.triage_assistance_service.applications.port.adapter.DummyJWTAuthService;
 import tech.sosa.triage_assistance_service.applications.port.adapter.MongoDBPendingTriagesQueue;
 import tech.sosa.triage_assistance_service.identity_access.application.service.Authorize;
@@ -32,7 +28,6 @@ import tech.sosa.triage_assistance_service.triage_evaluations.application.Triage
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.PendingTriagesQueue;
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.TriageRepository;
 import tech.sosa.triage_assistance_service.identity_access.port.adapter.HardcodedAuthService;
-import tech.sosa.triage_assistance_service.identity_access.port.adapter.LoggingEventStore;
 
 @Configuration
 public class Config {
@@ -91,34 +86,6 @@ public class Config {
                         .getDatabase("queue")
                         .getCollection("pending-triages")
         );
-    }
-
-    @Bean
-    public FilterRegistrationBean<EventPublisherResetFilter> eventPublisherResetFilterFilter()
-            throws IOException, TimeoutException {
-        FilterRegistrationBean<EventPublisherResetFilter> registrationBean
-                = new FilterRegistrationBean<>();
-
-        registrationBean.setFilter(new EventPublisherResetFilter(
-                new LoggingEventStore(
-                        jsonMapper()
-                ),
-                pendingCasesQueue(),
-                rabbitMQChannel()
-        ));
-
-        registrationBean.addUrlPatterns("/*");
-        return registrationBean;
-    }
-
-    @Bean
-    public FilterRegistrationBean<JSONTriageValidationFilter> jsonTriageValidationFilter() {
-        FilterRegistrationBean<JSONTriageValidationFilter> registrationBean
-                = new FilterRegistrationBean<>();
-
-        registrationBean.setFilter(new JSONTriageValidationFilter(triageJsonSchema()));
-        registrationBean.addUrlPatterns("/triage/*");
-        return registrationBean;
     }
 
     @Bean
