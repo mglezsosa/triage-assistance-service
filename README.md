@@ -2,11 +2,13 @@
 
 ## Setup with docker
 
-Just run:
+1. Configure the environment variables with `.env` file in `docker/` directory.
+You may want to rename `example.env` to `.env` to get started quickly.
 
-```bash
-./run-docker.sh
-```
+1. Run the following script:
+    ```bash
+    ./run-docker.sh
+    ```
 
 ## To-Dos and improvements
 
