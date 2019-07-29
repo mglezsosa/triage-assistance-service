@@ -26,7 +26,7 @@ import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.Triag
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.TriageRepository;
 import tech.sosa.triage_assistance_service.triage_evaluations.persistence.TriageRepositoryStub;
 import tech.sosa.triage_assistance_service.triage_evaluations.port.adapter.InMemoryPendingTriagesQueue;
-import tech.sosa.triage_assistance_service.identity_access.port.adapter.LoggingEventStore;
+import tech.sosa.triage_assistance_service.shared.port.adapter.LoggingEventStore;
 import tech.sosa.triage_assistance_service.shared.domain.event.EventPublisher;
 import tech.sosa.triage_assistance_service.triage_evaluations.utils.TestWithUtils;
 

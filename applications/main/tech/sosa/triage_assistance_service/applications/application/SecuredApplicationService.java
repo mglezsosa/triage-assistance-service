@@ -6,13 +6,13 @@ import tech.sosa.triage_assistance_service.shared.application.service.Applicatio
 public class SecuredApplicationService<S, T extends ApplicationRequest> implements ApplicationService<S, T> {
 
     private ApplicationService<S, T> proxiedApplicationService;
-    private AuthService authService;
-    private AuthData authData;
+    private AuthorizationService authService;
+    private AuthorizationData authData;
 
     public SecuredApplicationService(
             ApplicationService<S, T> proxiedApplicationService,
-            AuthService authService,
-            AuthData authData) {
+            AuthorizationService authService,
+            AuthorizationData authData) {
         this.proxiedApplicationService = proxiedApplicationService;
         this.authService = authService;
         this.authData = authData;

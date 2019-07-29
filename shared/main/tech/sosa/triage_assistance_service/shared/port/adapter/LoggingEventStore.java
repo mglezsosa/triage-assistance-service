@@ -1,4 +1,4 @@
-package tech.sosa.triage_assistance_service.identity_access.port.adapter;
+package tech.sosa.triage_assistance_service.shared.port.adapter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

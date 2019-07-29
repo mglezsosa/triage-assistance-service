@@ -1,5 +1,6 @@
 POST http://localhost:8080/triage/
 Content-Type: application/json
+Authorization: Bearer token-admin
 
 {
     "triage": {
@@ -73,15 +74,18 @@ Content-Type: application/json
 ###
 
 GET http://localhost:8080/triage/
+Authorization: Bearer token-admin
 
 ###
 
 GET http://localhost:8080/triage/21522001:246454002=41847000
+Authorization: Bearer token-admin
 
 ###
 
 PUT http://localhost:8080/triage/
 Content-Type: application/json
+Authorization: Bearer token-admin
 
 {
     "triage": {
@@ -155,6 +159,7 @@ Content-Type: application/json
 ###
 
 DELETE http://localhost:8080/triage/21522001:246454002=41847000
+Authorization: Bearer token-admin
 
 ###
 
@@ -196,6 +201,7 @@ Content-Type: application/json
 ###
 
 GET http://localhost:8080/triage/next-enqueued
+Authorization: Bearer token-admin
 
 ###
 

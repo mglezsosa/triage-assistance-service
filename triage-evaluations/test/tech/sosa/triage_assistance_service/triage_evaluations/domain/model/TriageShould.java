@@ -2,19 +2,12 @@ package tech.sosa.triage_assistance_service.triage_evaluations.domain.model;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.NoSuchElementException;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import tech.sosa.triage_assistance_service.triage_evaluations.domain.event.AuditingCriticalCheckTriageAssessedSubscriber;
-import tech.sosa.triage_assistance_service.triage_evaluations.port.adapter.InMemoryPendingTriagesQueue;
-import tech.sosa.triage_assistance_service.identity_access.port.adapter.LoggingEventStore;
-import tech.sosa.triage_assistance_service.shared.domain.event.EventPublisher;
 import tech.sosa.triage_assistance_service.triage_evaluations.utils.TestWithUtils;
 
 

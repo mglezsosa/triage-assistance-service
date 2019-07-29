@@ -16,14 +16,19 @@ import org.everit.json.schema.Schema;
 import org.everit.json.schema.loader.SchemaLoader;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import tech.sosa.triage_assistance_service.applications.application.AuthorizationService;
 import tech.sosa.triage_assistance_service.applications.infrastructure.everit.json.schema.SCGExpressionValidator;
 import tech.sosa.triage_assistance_service.applications.infrastructure.persistence.MongoDBTriageRepository;
-import tech.sosa.triage_assistance_service.applications.port.adapter.DummyJWTAuthService;
+import tech.sosa.triage_assistance_service.applications.infrastructure.springframework.boot.filter.EnableMultiReadHttpServletRequestFilter;
+import tech.sosa.triage_assistance_service.applications.port.adapter.DummyJWTAuthorizationService;
 import tech.sosa.triage_assistance_service.applications.port.adapter.MongoDBPendingTriagesQueue;
 import tech.sosa.triage_assistance_service.identity_access.application.service.Authorize;
 import tech.sosa.triage_assistance_service.identity_access.domain.model.AuthService;
+import tech.sosa.triage_assistance_service.shared.domain.event.EventStore;
+import tech.sosa.triage_assistance_service.shared.port.adapter.LoggingEventStore;
 import tech.sosa.triage_assistance_service.triage_evaluations.application.TriageMapper;
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.PendingTriagesQueue;
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.TriageRepository;
@@ -99,8 +104,8 @@ public class Config {
     }
 
     @Bean
-    public tech.sosa.triage_assistance_service.applications.application.AuthService dummyJWTAuthService() {
-        return new DummyJWTAuthService(authorizeUseCase());
+    public AuthorizationService dummyJWTAuthService() {
+        return new DummyJWTAuthorizationService(authorizeUseCase());
     }
 
     @Bean
@@ -121,6 +126,19 @@ public class Config {
     @Bean
     public Channel rabbitMQChannel() throws IOException, TimeoutException {
         return rabbitMQConnection().createChannel();
+    }
+
+    @Bean
+    public FilterRegistrationBean<EnableMultiReadHttpServletRequestFilter> jsonTriageValidationFilter() {
+        FilterRegistrationBean<EnableMultiReadHttpServletRequestFilter> registrationBean
+                = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new EnableMultiReadHttpServletRequestFilter());
+        return registrationBean;
+    }
+
+    @Bean
+    public EventStore loggingEventStore() {
+        return new LoggingEventStore(jsonMapper());
     }
 
 }
