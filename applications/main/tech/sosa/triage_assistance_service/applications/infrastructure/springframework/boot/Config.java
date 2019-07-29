@@ -69,7 +69,7 @@ public class Config {
 
     @Bean
     public MongoClient mongoClient() {
-        return MongoClients.create("mongodb://triage:secret@localhost:27017/?authSource=admin");
+        return MongoClients.create("mongodb://triage:secret@mongo:27017/?authSource=admin");
     }
 
     @Bean
@@ -111,7 +111,7 @@ public class Config {
     @Bean
     public ConnectionFactory rabbitMQConnectionFactory() {
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
+        factory.setHost("rabbitmq");
         factory.setPort(5672);
         factory.setUsername("guest");
         factory.setPassword("guest");

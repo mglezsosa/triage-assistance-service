@@ -2,8 +2,18 @@ version: '3'
 
 services:
 
+  triage-service:
+    depends_on:
+      - mongo
+      - rabbitmq
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.triage-service
+    restart: always
+    ports:
+      - 8080:8080
+
   mongo:
-    container_name: "mongo-triage"
     image: "mongo:latest"
     restart: always
     environment:
@@ -22,7 +32,6 @@ services:
       - mongo-triage:/data/db
 
   mongo-express:
-    container_name: "mongo-express-triage"
     image: "mongo-express"
     restart: always
     ports:
@@ -31,11 +40,10 @@ services:
       - ME_CONFIG_MONGODB_ADMINUSERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - ME_CONFIG_MONGODB_ADMINPASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
 
-  rabbit-mq:
-    container_name: "rabbit-mq-notifications"
+  rabbitmq:
     build:
       context: .
-      dockerfile: rabbitmq-dockerfile
+      dockerfile: Dockerfile.rabbitmq
     restart: always
     ports:
       - 5672:5672

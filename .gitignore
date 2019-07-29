@@ -148,3 +148,5 @@ build/
 gradle-app.setting
 
 **/.env
+*___jb_old___
+*___jb_bak___

@@ -18,7 +18,6 @@ dependencies {
 }
 
 bootJar {
-    mainClassName = 'tech.sosa.triage_assistance_service.infrastructure.springframework.boot.App'
     baseName = 'triage-service'
     version =  '0.1.0'
 }
