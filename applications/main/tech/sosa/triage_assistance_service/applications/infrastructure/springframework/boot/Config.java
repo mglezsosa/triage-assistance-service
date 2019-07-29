@@ -24,6 +24,7 @@ import tech.sosa.triage_assistance_service.applications.infrastructure.everit.js
 import tech.sosa.triage_assistance_service.applications.infrastructure.persistence.MongoDBTriageRepository;
 import tech.sosa.triage_assistance_service.applications.infrastructure.springframework.boot.filter.EventPublisherResetFilter;
 import tech.sosa.triage_assistance_service.applications.infrastructure.springframework.boot.filter.JSONTriageValidationFilter;
+import tech.sosa.triage_assistance_service.applications.port.adapter.DummyJWTAuthService;
 import tech.sosa.triage_assistance_service.applications.port.adapter.MongoDBPendingTriagesQueue;
 import tech.sosa.triage_assistance_service.identity_access.application.service.Authorize;
 import tech.sosa.triage_assistance_service.identity_access.domain.model.AuthService;
@@ -130,10 +131,10 @@ public class Config {
         return new Authorize(authService());
     }
 
-//    @Bean
-//    public TriageRepository inMemoryTriageRepository() {
-//        return new InMemoryTriageRepository();
-//    }\
+    @Bean
+    public tech.sosa.triage_assistance_service.applications.application.AuthService dummyJWTAuthService() {
+        return new DummyJWTAuthService(authorizeUseCase());
+    }
 
     @Bean
     public ConnectionFactory rabbitMQConnectionFactory() {
@@ -147,8 +148,7 @@ public class Config {
 
     @Bean
     public Connection rabbitMQConnection() throws IOException, TimeoutException {
-        Connection connection = rabbitMQConnectionFactory().newConnection();
-        return connection;
+        return rabbitMQConnectionFactory().newConnection();
     }
 
     @Bean

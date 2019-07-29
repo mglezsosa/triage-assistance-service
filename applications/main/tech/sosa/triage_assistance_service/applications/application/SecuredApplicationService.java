@@ -1,4 +1,4 @@
-package tech.sosa.triage_assistance_service.identity_access.application.service;
+package tech.sosa.triage_assistance_service.applications.application;
 
 import tech.sosa.triage_assistance_service.shared.application.service.ApplicationRequest;
 import tech.sosa.triage_assistance_service.shared.application.service.ApplicationService;
@@ -6,23 +6,21 @@ import tech.sosa.triage_assistance_service.shared.application.service.Applicatio
 public class SecuredApplicationService<S, T extends ApplicationRequest> implements ApplicationService<S, T> {
 
     private ApplicationService<S, T> proxiedApplicationService;
-    private Authorize authService;
-    private AuthorizeRequest authRequest;
+    private AuthService authService;
+    private AuthData authData;
 
     public SecuredApplicationService(
             ApplicationService<S, T> proxiedApplicationService,
-            Authorize authService,
-            AuthorizeRequest authRequest) {
+            AuthService authService,
+            AuthData authData) {
         this.proxiedApplicationService = proxiedApplicationService;
         this.authService = authService;
-        this.authRequest = authRequest;
+        this.authData = authData;
     }
 
     @Override
     public S execute(T request) {
-
-        authService.execute(authRequest);
-
+        authService.execute(authData);
         return proxiedApplicationService.execute(request);
     }
 }
