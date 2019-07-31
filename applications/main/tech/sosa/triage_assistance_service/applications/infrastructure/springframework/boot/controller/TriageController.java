@@ -68,19 +68,19 @@ public class TriageController {
                                                                @RequestBody String body,
                                                                @RequestHeader("Authorization") String authHeader) {
 
-        return new SecuredApplicationService<>(
-                new EventPublisherResetApplicationService<>(
+        return new EventPublisherResetApplicationService<>(
+                new SecuredApplicationService<>(
                         new CheckForCriticalState(repository, queue),
-                        eventStore,
-                        queue,
-                        rabbitMQChannel
+                        authService,
+                        JWTAuthorizationData.fromAuthorizationHeaderString(
+                                authHeader,
+                                CheckForCriticalState.class.getName(),
+                                body
+                        )
                 ),
-                authService,
-                JWTAuthorizationData.fromAuthorizationHeaderString(
-                        authHeader,
-                        CheckForCriticalState.class.getName(),
-                        body
-                )
+                eventStore,
+                queue,
+                rabbitMQChannel
         ).execute(request);
     }
 
@@ -89,19 +89,19 @@ public class TriageController {
                                            @RequestBody String body,
                                            @RequestHeader("Authorization") String authHeader) {
 
-        return new SecuredApplicationService<>(
-                new EventPublisherResetApplicationService<>(
+        return new EventPublisherResetApplicationService<>(
+                new SecuredApplicationService<>(
                         new FullyEvaluate(repository, mapper, queue),
-                        eventStore,
-                        queue,
-                        rabbitMQChannel
+                        authService,
+                        JWTAuthorizationData.fromAuthorizationHeaderString(
+                                authHeader,
+                                FullyEvaluate.class.getName(),
+                                body
+                        )
                 ),
-                authService,
-                JWTAuthorizationData.fromAuthorizationHeaderString(
-                        authHeader,
-                        FullyEvaluate.class.getName(),
-                        body
-                )
+                eventStore,
+                queue,
+                rabbitMQChannel
         ).execute(request);
     }
 
@@ -110,23 +110,23 @@ public class TriageController {
                                        @RequestBody String body,
                                        @RequestHeader("Authorization") String authHeader) {
 
-        new SecuredApplicationService<>(
-                new TriageJSONSchemaValidationApplicationService<>(
-                        new EventPublisherResetApplicationService<>(
+        new EventPublisherResetApplicationService<>(
+                new SecuredApplicationService<>(
+                        new TriageJSONSchemaValidationApplicationService<>(
                                 new CreateTriage(repository, mapper),
-                                eventStore,
-                                queue,
-                                rabbitMQChannel
+                                jsonSchema,
+                                body
                         ),
-                        jsonSchema,
-                        body
+                        authService,
+                        JWTAuthorizationData.fromAuthorizationHeaderString(
+                                authHeader,
+                                CreateTriage.class.getName(),
+                                body
+                        )
                 ),
-                authService,
-                JWTAuthorizationData.fromAuthorizationHeaderString(
-                        authHeader,
-                        CreateTriage.class.getName(),
-                        body
-                )
+                eventStore,
+                queue,
+                rabbitMQChannel
         ).execute(request);
 
         return ResponseEntity.ok().build();
@@ -137,23 +137,23 @@ public class TriageController {
                                        @RequestBody String body,
                                        @RequestHeader("Authorization") String authHeader) {
 
-        new SecuredApplicationService<>(
-                new TriageJSONSchemaValidationApplicationService<>(
-                        new EventPublisherResetApplicationService<>(
+        new EventPublisherResetApplicationService<>(
+                new SecuredApplicationService<>(
+                        new TriageJSONSchemaValidationApplicationService<>(
                                 new UpdateTriage(repository, mapper),
-                                eventStore,
-                                queue,
-                                rabbitMQChannel
+                                jsonSchema,
+                                body
                         ),
-                        jsonSchema,
-                        body
+                        authService,
+                        JWTAuthorizationData.fromAuthorizationHeaderString(
+                                authHeader,
+                                UpdateTriage.class.getName(),
+                                body
+                        )
                 ),
-                authService,
-                JWTAuthorizationData.fromAuthorizationHeaderString(
-                        authHeader,
-                        UpdateTriage.class.getName(),
-                        body
-                )
+                eventStore,
+                queue,
+                rabbitMQChannel
         ).execute(request);
 
         return ResponseEntity.ok().build();
@@ -164,19 +164,19 @@ public class TriageController {
                                 @RequestBody(required = false) String body,
                                 @RequestHeader("Authorization") String authHeader) {
 
-        return new SecuredApplicationService<>(
-                new EventPublisherResetApplicationService<>(
+        return new EventPublisherResetApplicationService<>(
+                new SecuredApplicationService<>(
                         new ViewTriage(repository, mapper),
-                        eventStore,
-                        queue,
-                        rabbitMQChannel
+                        authService,
+                        JWTAuthorizationData.fromAuthorizationHeaderString(
+                                authHeader,
+                                ViewTriage.class.getName(),
+                                body
+                        )
                 ),
-                authService,
-                JWTAuthorizationData.fromAuthorizationHeaderString(
-                        authHeader,
-                        ViewTriage.class.getName(),
-                        body
-                )
+                eventStore,
+                queue,
+                rabbitMQChannel
         ).execute(new ViewTriageRequest(id));
     }
 
@@ -185,19 +185,19 @@ public class TriageController {
             @RequestBody(required = false) String body,
             @RequestHeader("Authorization") String authHeader) {
 
-        return new SecuredApplicationService<>(
-                new EventPublisherResetApplicationService<>(
+        return new EventPublisherResetApplicationService<>(
+                new SecuredApplicationService<>(
                         new ViewAllTriages(repository, mapper),
-                        eventStore,
-                        queue,
-                        rabbitMQChannel
+                        authService,
+                        JWTAuthorizationData.fromAuthorizationHeaderString(
+                                authHeader,
+                                ViewAllTriages.class.getName(),
+                                body
+                        )
                 ),
-                authService,
-                JWTAuthorizationData.fromAuthorizationHeaderString(
-                        authHeader,
-                        ViewAllTriages.class.getName(),
-                        body
-                )
+                eventStore,
+                queue,
+                rabbitMQChannel
         ).execute(null);
     }
 
@@ -206,19 +206,20 @@ public class TriageController {
                                        @RequestBody(required = false) String body,
                                        @RequestHeader("Authorization") String authHeader) {
 
-        new SecuredApplicationService<>(
-                new EventPublisherResetApplicationService<>(
+
+        new EventPublisherResetApplicationService<>(
+                new SecuredApplicationService<>(
                         new DeleteTriage(repository, mapper),
-                        eventStore,
-                        queue,
-                        rabbitMQChannel
+                        authService,
+                        JWTAuthorizationData.fromAuthorizationHeaderString(
+                                authHeader,
+                                DeleteTriage.class.getName(),
+                                body
+                        )
                 ),
-                authService,
-                JWTAuthorizationData.fromAuthorizationHeaderString(
-                        authHeader,
-                        DeleteTriage.class.getName(),
-                        body
-                )
+                eventStore,
+                queue,
+                rabbitMQChannel
         ).execute(new DeleteTriageRequest(id));
 
         return ResponseEntity.ok().build();
@@ -229,19 +230,19 @@ public class TriageController {
             @RequestBody(required = false) String body,
             @RequestHeader("Authorization") String authHeader) {
 
-        return new SecuredApplicationService<>(
-                new EventPublisherResetApplicationService<>(
+        return new EventPublisherResetApplicationService<>(
+                new SecuredApplicationService<>(
                         new NextEnqueuedTriage(queue),
-                        eventStore,
-                        queue,
-                        rabbitMQChannel
+                        authService,
+                        JWTAuthorizationData.fromAuthorizationHeaderString(
+                                authHeader,
+                                NextEnqueuedTriage.class.getName(),
+                                body
+                        )
                 ),
-                authService,
-                JWTAuthorizationData.fromAuthorizationHeaderString(
-                        authHeader,
-                        NextEnqueuedTriage.class.getName(),
-                        body
-                )
+                eventStore,
+                queue,
+                rabbitMQChannel
         ).execute(null);
     }
 

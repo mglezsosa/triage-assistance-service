@@ -7,6 +7,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import tech.sosa.triage_assistance_service.identity_access.domain.model.InvalidCredentialsException;
+import tech.sosa.triage_assistance_service.identity_access.domain.model.NotAuthorizedException;
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.TriageAlreadyExistsException;
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.TriageDoesNotExistException;
 
@@ -30,6 +32,20 @@ public class TriageErrorAdvisor {
     @ExceptionHandler({SCGException.class})
     public ResponseEntity handleIncorrectSNOMEDCTExpression(SCGException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .body(new JSONObject().put("message", e.getMessage()).toString());
+    }
+
+    @ExceptionHandler({NotAuthorizedException.class})
+    public ResponseEntity handleNotAuthorized(NotAuthorizedException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .body(new JSONObject().put("message", e.getMessage()).toString());
+    }
+
+    @ExceptionHandler({InvalidCredentialsException.class})
+    public ResponseEntity handleNotAuthenticated(InvalidCredentialsException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .body(new JSONObject().put("message", e.getMessage()).toString());
     }

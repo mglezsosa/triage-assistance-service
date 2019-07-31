@@ -74,7 +74,21 @@ Authorization: Bearer token-admin
 ###
 
 GET http://localhost:8080/triage/
+
+###
+
+GET http://localhost:8080/triage/
 Authorization: Bearer token-admin
+
+###
+
+GET http://localhost:8080/triage/
+Authorization: Bearer token-health-professional
+
+###
+
+GET http://localhost:8080/triage/
+Authorization: Bearer token-telephone-operator
 
 ###
 
@@ -85,7 +99,7 @@ Authorization: Bearer token-admin
 
 PUT http://localhost:8080/triage/
 Content-Type: application/json
-Authorization: Bearer token-admin
+Authorization: Bearer token-health-professional
 
 {
     "triage": {
@@ -159,7 +173,7 @@ Authorization: Bearer token-admin
 ###
 
 DELETE http://localhost:8080/triage/21522001:246454002=41847000
-Authorization: Bearer token-admin
+Authorization: Bearer token-health-professional
 
 ###
 
@@ -178,6 +192,7 @@ Authorization: Bearer token-admin
 
 POST http://localhost:8080/triage/critical-only
 Content-Type: application/json
+Authorization: Bearer token-telephone-operator
 
 {
     "triageChiefComplaintId": "21522001:246454002=41847000",
@@ -190,6 +205,7 @@ Content-Type: application/json
 
 POST http://localhost:8080/triage/critical-only
 Content-Type: application/json
+Authorization: Bearer token-telephone-operator
 
 {
     "triageChiefComplaintId": "21522001:246454002=41847000",
@@ -201,24 +217,44 @@ Content-Type: application/json
 ###
 
 GET http://localhost:8080/triage/next-enqueued
+Authorization: Bearer token-telephone-operator
+
+###
+
+GET http://localhost:8080/triage/next-enqueued
 Authorization: Bearer token-admin
 
 ###
 
 POST http://localhost:8080/triage/full
 Content-Type: application/json
+Authorization: Bearer token-telephone-operator
 
 {
-    "triageChiefComplaintId": "21522001:246454002=41847000",
-    "findingIds": [
-        "267055007"
-    ]
+  "triageChiefComplaintId": "21522001:246454002=41847000",
+  "findingIds": [
+    "267055007"
+  ]
 }
 
 ###
 
 POST http://localhost:8080/triage/full
 Content-Type: application/json
+Authorization: Bearer token-health-professional
+
+{
+  "triageChiefComplaintId": "21522001:246454002=41847000",
+  "findingIds": [
+    "267055007"
+  ]
+}
+
+###
+
+POST http://localhost:8080/triage/full
+Content-Type: application/json
+Authorization: Bearer token-health-professional
 
 {
     "triageChiefComplaintId": "21522001:246454002=41847000",
@@ -231,6 +267,7 @@ Content-Type: application/json
 
 POST http://localhost:8080/triage/full
 Content-Type: application/json
+Authorization: Bearer token-health-professional
 
 {
     "previousPreTriageId": "9f937903-d2a7-47a6-8dab-9a28dff1529b",

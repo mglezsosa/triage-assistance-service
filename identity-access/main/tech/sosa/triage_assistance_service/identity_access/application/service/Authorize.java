@@ -15,10 +15,10 @@ public class Authorize implements ApplicationService<Void, AuthorizeRequest> {
     public Void execute(AuthorizeRequest request) {
 
         User activeUser = authService.authenticate(new Credentials(request.authData))
-                .orElseThrow(InvalidCredentialsException::new);
+                .orElseThrow(() -> new InvalidCredentialsException("User not authenticated."));
 
         if (!activeUser.hasAuthorization(request.useCaseName, request.request)) {
-            throw new NotAuthorizedException();
+            throw new NotAuthorizedException("This user is not authorized to execute this action.");
         }
 
         return null;
