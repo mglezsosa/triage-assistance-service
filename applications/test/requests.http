@@ -278,3 +278,21 @@ Authorization: Bearer token-health-professional
 }
 
 ###
+
+GET http://localhost:8080/triage/queue-size
+Content-Type: application/json
+Authorization: Bearer token-health-professional
+
+###
+
+GET http://localhost:8080/triage/queue-size
+Content-Type: application/json
+Authorization: Bearer token-admin
+
+###
+
+GET http://localhost:8080/triage/queue-size
+Content-Type: application/json
+Authorization: Bearer token-telephone-operator
+
+###

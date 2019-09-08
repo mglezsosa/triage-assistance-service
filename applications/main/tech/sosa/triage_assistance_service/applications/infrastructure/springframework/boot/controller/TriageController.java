@@ -14,21 +14,8 @@ import tech.sosa.triage_assistance_service.applications.port.adapter.JWTAuthoriz
 import tech.sosa.triage_assistance_service.shared.domain.event.EventStore;
 import tech.sosa.triage_assistance_service.triage_evaluations.application.TriageMapper;
 import tech.sosa.triage_assistance_service.shared.application.dto.AlgorithmLevelDTO;
-import tech.sosa.triage_assistance_service.triage_evaluations.application.service.CheckForCriticalStateRequest;
-import tech.sosa.triage_assistance_service.triage_evaluations.application.service.FullyEvaluateRequest;
+import tech.sosa.triage_assistance_service.triage_evaluations.application.service.*;
 import tech.sosa.triage_assistance_service.shared.application.dto.TriageDTO;
-import tech.sosa.triage_assistance_service.triage_evaluations.application.service.CheckForCriticalState;
-import tech.sosa.triage_assistance_service.triage_evaluations.application.service.CreateTriage;
-import tech.sosa.triage_assistance_service.triage_evaluations.application.service.CreateTriageRequest;
-import tech.sosa.triage_assistance_service.triage_evaluations.application.service.DeleteTriage;
-import tech.sosa.triage_assistance_service.triage_evaluations.application.service.DeleteTriageRequest;
-import tech.sosa.triage_assistance_service.triage_evaluations.application.service.FullyEvaluate;
-import tech.sosa.triage_assistance_service.triage_evaluations.application.service.NextEnqueuedTriage;
-import tech.sosa.triage_assistance_service.triage_evaluations.application.service.UpdateTriage;
-import tech.sosa.triage_assistance_service.triage_evaluations.application.service.UpdateTriageRequest;
-import tech.sosa.triage_assistance_service.triage_evaluations.application.service.ViewAllTriages;
-import tech.sosa.triage_assistance_service.triage_evaluations.application.service.ViewTriage;
-import tech.sosa.triage_assistance_service.triage_evaluations.application.service.ViewTriageRequest;
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.event.CriticalCheckTriageAssessed;
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.CriticalCheckAssesmentOutput;
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.PendingTriagesQueue;
@@ -233,6 +220,27 @@ public class TriageController {
         return new EventPublisherResetApplicationService<>(
                 new SecuredApplicationService<>(
                         new NextEnqueuedTriage(queue),
+                        authService,
+                        JWTAuthorizationData.fromAuthorizationHeaderString(
+                                authHeader,
+                                NextEnqueuedTriage.class.getName(),
+                                body
+                        )
+                ),
+                eventStore,
+                queue,
+                rabbitMQChannel
+        ).execute(null);
+    }
+
+    @GetMapping("/queue-size")
+    public Long viewNumberOfEnqueuedCases(
+            @RequestBody(required = false) String body,
+            @RequestHeader("Authorization") String authHeader) {
+
+        return new EventPublisherResetApplicationService<>(
+                new SecuredApplicationService<>(
+                        new ViewNumberOfEqueuedCases(queue),
                         authService,
                         JWTAuthorizationData.fromAuthorizationHeaderString(
                                 authHeader,
