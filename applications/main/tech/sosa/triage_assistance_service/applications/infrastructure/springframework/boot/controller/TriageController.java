@@ -21,6 +21,7 @@ import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.Criti
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.PendingTriagesQueue;
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.TriageRepository;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/triage")
 public class TriageController {
