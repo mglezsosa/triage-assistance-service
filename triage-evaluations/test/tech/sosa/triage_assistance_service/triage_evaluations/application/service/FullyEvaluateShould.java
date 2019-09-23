@@ -1,6 +1,7 @@
 package tech.sosa.triage_assistance_service.triage_evaluations.application.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -17,6 +18,7 @@ import tech.sosa.triage_assistance_service.shared.application.dto.DiscriminatorD
 import tech.sosa.triage_assistance_service.shared.application.dto.TriageDTO;
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.event.AuditingFullTriageAssessmentSubscriber;
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.event.CriticalCheckTriageAssessed;
+import tech.sosa.triage_assistance_service.triage_evaluations.domain.event.FullTriageAssessed;
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.ChiefComplaint;
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.ClinicalFindingId;
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.ClinicalFindingTitle;
@@ -25,6 +27,7 @@ import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.Pendi
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.TriageDoesNotExistException;
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.TriageRepository;
 import tech.sosa.triage_assistance_service.triage_evaluations.persistence.TriageRepositoryStub;
+import tech.sosa.triage_assistance_service.triage_evaluations.port.adapter.InMemoryEventStore;
 import tech.sosa.triage_assistance_service.triage_evaluations.port.adapter.InMemoryPendingTriagesQueue;
 import tech.sosa.triage_assistance_service.shared.port.adapter.LoggingEventStore;
 import tech.sosa.triage_assistance_service.shared.domain.event.EventPublisher;
@@ -35,6 +38,7 @@ public class FullyEvaluateShould extends TestWithUtils {
     private PendingTriagesQueue queue;
     private TriageRepository repository;
     private TriageMapper mapper;
+    private InMemoryEventStore eventStore;
 
     @Before
     public void setUp() throws IOException, URISyntaxException {
@@ -42,10 +46,10 @@ public class FullyEvaluateShould extends TestWithUtils {
         repository = TriageRepositoryStub.with(mapper.from(readJSON(readFromResource("triageExample.json"),
                 TriageDTO.class)));
         queue = new InMemoryPendingTriagesQueue(new ArrayList<>());
+        eventStore = new InMemoryEventStore();
 
         EventPublisher.instance().reset();
-        EventPublisher.instance().subscribe(new AuditingFullTriageAssessmentSubscriber(
-                new LoggingEventStore(objectMapper)));
+        EventPublisher.instance().subscribe(new AuditingFullTriageAssessmentSubscriber(eventStore));
     }
 
     @Test(expected = SCGException.class)
@@ -87,6 +91,11 @@ public class FullyEvaluateShould extends TestWithUtils {
                 ),
                 actualOutput
         );
+
+        assertEquals(eventStore.events().size(), 1);
+        FullTriageAssessed capturedEvent = (FullTriageAssessed) eventStore.events().get(0);
+        assertEquals(capturedEvent.getChiefComplaintId(), "21522001:246454002=41847000");
+        assertNull(capturedEvent.getPreviousAssessment());
     }
 
     @Test
@@ -111,6 +120,11 @@ public class FullyEvaluateShould extends TestWithUtils {
                 ),
                 actualOutput
         );
+
+        assertEquals(eventStore.events().size(), 1);
+        FullTriageAssessed capturedEvent = (FullTriageAssessed) eventStore.events().get(0);
+        assertEquals(capturedEvent.getChiefComplaintId(), "21522001:246454002=41847000");
+        assertNull(capturedEvent.getPreviousAssessment());
     }
 
     @Test
@@ -151,6 +165,11 @@ public class FullyEvaluateShould extends TestWithUtils {
                 ),
                 actualOutput
         );
+
+        assertEquals(eventStore.events().size(), 1);
+        FullTriageAssessed capturedEvent = (FullTriageAssessed) eventStore.events().get(0);
+        assertEquals(capturedEvent.getChiefComplaintId(), "21522001:246454002=41847000");
+        assertNull(capturedEvent.getPreviousAssessment());
     }
 
     @Test
@@ -180,6 +199,11 @@ public class FullyEvaluateShould extends TestWithUtils {
                 ),
                 actualOutput
         );
+
+        assertEquals(eventStore.events().size(), 1);
+        FullTriageAssessed capturedEvent = (FullTriageAssessed) eventStore.events().get(0);
+        assertEquals(capturedEvent.getChiefComplaintId(), "21522001:246454002=41847000");
+        assertNull(capturedEvent.getPreviousAssessment());
     }
 
     @Test
@@ -223,6 +247,11 @@ public class FullyEvaluateShould extends TestWithUtils {
                 ),
                 actualOutput
         );
+
+        assertEquals(eventStore.events().size(), 1);
+        FullTriageAssessed capturedEvent = (FullTriageAssessed) eventStore.events().get(0);
+        assertEquals(capturedEvent.getChiefComplaintId(), "21522001:246454002=41847000");
+        assertEquals(capturedEvent.getPreviousAssessment(), prevAssessment);
     }
 
     @Test(expected = NoSuchElementException.class)

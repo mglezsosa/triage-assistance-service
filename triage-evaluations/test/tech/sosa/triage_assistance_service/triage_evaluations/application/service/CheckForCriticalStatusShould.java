@@ -1,6 +1,7 @@
 package tech.sosa.triage_assistance_service.triage_evaluations.application.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -12,20 +13,29 @@ import java.util.NoSuchElementException;
 import org.junit.Before;
 import org.junit.Test;
 import org.snomed.languages.scg.SCGException;
+import tech.sosa.triage_assistance_service.shared.domain.event.EventPublisher;
 import tech.sosa.triage_assistance_service.triage_evaluations.application.TriageMapper;
 import tech.sosa.triage_assistance_service.shared.application.dto.TriageDTO;
+import tech.sosa.triage_assistance_service.triage_evaluations.domain.event.AuditingCriticalCheckTriageAssessedSubscriber;
+import tech.sosa.triage_assistance_service.triage_evaluations.domain.event.AuditingFullTriageAssessmentSubscriber;
+import tech.sosa.triage_assistance_service.triage_evaluations.domain.event.CriticalCheckTriageAssessed;
+import tech.sosa.triage_assistance_service.triage_evaluations.domain.event.FullTriageAssessed;
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.CriticalCheckAssesmentOutput;
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.PendingTriagesQueue;
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.TriageDoesNotExistException;
 import tech.sosa.triage_assistance_service.triage_evaluations.domain.model.TriageRepository;
 import tech.sosa.triage_assistance_service.triage_evaluations.persistence.TriageRepositoryStub;
+import tech.sosa.triage_assistance_service.triage_evaluations.port.adapter.InMemoryEventStore;
 import tech.sosa.triage_assistance_service.triage_evaluations.port.adapter.InMemoryPendingTriagesQueue;
+import tech.sosa.triage_assistance_service.triage_evaluations.port.adapter.SpyQueueSizeChangedSubscriber;
 import tech.sosa.triage_assistance_service.triage_evaluations.utils.TestWithUtils;
 
 public class CheckForCriticalStatusShould extends TestWithUtils {
 
     private TriageRepository repository;
     private PendingTriagesQueue queue;
+    private InMemoryEventStore eventStore;
+    private SpyQueueSizeChangedSubscriber spyQueueSizeChangedSubscriber;
 
     @Before
     public void setUp() throws IOException, URISyntaxException {
@@ -33,6 +43,12 @@ public class CheckForCriticalStatusShould extends TestWithUtils {
         repository = TriageRepositoryStub.with(mapper.from(readJSON(readFromResource("triageExample.json"),
                 TriageDTO.class)));
         queue = new InMemoryPendingTriagesQueue(new ArrayList<>());
+        eventStore = new InMemoryEventStore();
+        spyQueueSizeChangedSubscriber = new SpyQueueSizeChangedSubscriber();
+
+        EventPublisher.instance().reset();
+        EventPublisher.instance().subscribe(new AuditingCriticalCheckTriageAssessedSubscriber(eventStore));
+        EventPublisher.instance().subscribe(spyQueueSizeChangedSubscriber);
     }
 
     @Test(expected = SCGException.class)
@@ -67,6 +83,13 @@ public class CheckForCriticalStatusShould extends TestWithUtils {
         );
 
         assertEquals(actualOutput, queue.nextPending().getOutput());
+
+        assertEquals(eventStore.events().size(), 1);
+        CriticalCheckTriageAssessed capturedEvent = (CriticalCheckTriageAssessed) eventStore.events().get(0);
+        assertEquals("21522001:246454002=41847000", capturedEvent.getFoundChiefComplaintId());
+        assertEquals(actualOutput, capturedEvent.getOutput());
+
+        assertEquals(1, spyQueueSizeChangedSubscriber.getNumberOfHandleEventCalls());
     }
 
     @Test
@@ -84,6 +107,13 @@ public class CheckForCriticalStatusShould extends TestWithUtils {
         );
 
         assertEquals(actualOutput, queue.nextPending().getOutput());
+
+        assertEquals(eventStore.events().size(), 1);
+        CriticalCheckTriageAssessed capturedEvent = (CriticalCheckTriageAssessed) eventStore.events().get(0);
+        assertEquals(capturedEvent.getFoundChiefComplaintId(), "21522001:246454002=41847000");
+        assertEquals(capturedEvent.getOutput(), actualOutput);
+
+        assertEquals(1, spyQueueSizeChangedSubscriber.getNumberOfHandleEventCalls());
     }
 
     @Test(expected = NoSuchElementException.class)
@@ -106,6 +136,8 @@ public class CheckForCriticalStatusShould extends TestWithUtils {
                 ),
                 actualOutput
         );
+
+        assertEquals(0, spyQueueSizeChangedSubscriber.getNumberOfHandleEventCalls());
 
         queue.nextPending();
     }
